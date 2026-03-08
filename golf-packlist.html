@@ -460,49 +460,90 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
 }
 
-function generatePacklist(days) {
-  const n = days.length;
-  const hotDays = days.filter(d => d.avgTemp > 22).length;
-  const coldDays = days.filter(d => d.avgTemp < 16).length;
-  const mildDays = n - hotDays - coldDays;
-  const rainyDays = days.filter(d => d.rainChance > 40).length;
-  const avgRain = days.reduce((a,d)=>a+d.rainChance,0)/days.length;
+// ONE DAY: minimal, weather-smart list for a single round
+function generateOneDayPacklist(day) {
+  const hot   = day.avgTemp > 18;
+  const cold  = day.avgTemp <= 12;
+  const mild  = !hot && !cold;
+  const rainy = day.rainChance > 40;
 
   return {
     clothing: [
-      { name: 'Golf polos / shirts', qty: n + 1 },
-      { name: 'Golf shorts', qty: hotDays + Math.ceil(mildDays/2) || 0 },
-      { name: 'Golf trousers', qty: coldDays + Math.ceil(mildDays/2) || 0 },
-      { name: 'Midlayer / pullover', qty: coldDays > 0 || mildDays > 1 ? 1 : 0 },
-      { name: 'Rain jacket', qty: avgRain > 25 ? 1 : 0 },
-      { name: 'Rain trousers', qty: avgRain > 45 ? 1 : 0 },
-      { name: 'Warm base layer', qty: coldDays > 1 ? 1 : 0 },
-      { name: 'Cap / visor', qty: 1 },
-      { name: 'Beanie (cold weather)', qty: coldDays > 0 ? 1 : 0 },
-      { name: 'Socks (golf)', qty: n + 2 },
-    ].filter(i => i.qty > 0),
+      { name: '1 golf polo / shirt',         qty: 1 },
+      hot  ? { name: 'Golf shorts',           qty: 1 } : null,
+      !hot ? { name: 'Golf trousers',         qty: 1 } : null,
+      (cold || mild) ? { name: 'Midlayer / pullover', qty: 1 } : null,
+      cold ? { name: 'Warm base layer',       qty: 1 } : null,
+      rainy ? { name: 'Rain jacket',          qty: 1 } : null,
+      { name: 'Cap / visor',                  qty: 1 },
+      cold ? { name: 'Beanie',                qty: 1 } : null,
+      { name: 'Golf socks',                   qty: 1 },
+    ].filter(Boolean),
     footwear: [
-      { name: 'Golf shoes (spiked)', qty: 1 },
-      { name: 'Casual shoes / trainers', qty: 1 },
-      { name: 'Flip flops / sandals', qty: hotDays > 1 ? 1 : 0 },
-    ].filter(i => i.qty > 0),
+      { name: 'Golf shoes',                   qty: 1 },
+    ],
     equipment: [
-      { name: 'Golf gloves', qty: 2 },
-      { name: 'Golf balls', qty: Math.max(12, n * 4) },
-      { name: 'Tees (mixed)', qty: 30 },
-      { name: 'Golf towel', qty: 1 },
-      { name: 'Divot tool & ball marker', qty: 1 },
-      { name: 'Rangefinder / GPS watch', qty: 1 },
-      { name: 'Umbrella', qty: avgRain > 30 ? 1 : 0 },
-    ].filter(i => i.qty > 0),
+      { name: 'Golf glove',                   qty: rainy ? 2 : 1 },
+      { name: 'Golf balls (sleeve)',           qty: 3 },
+      { name: 'Tees',                         qty: 10 },
+      { name: 'Divot tool & ball marker',     qty: 1 },
+      { name: 'Golf towel',                   qty: 1 },
+      rainy ? { name: 'Umbrella',             qty: 1 } : null,
+    ].filter(Boolean),
     essentials: [
-      { name: 'Sunscreen (SPF 50)', qty: hotDays > 0 ? 1 : 0 },
-      { name: 'Sunglasses', qty: hotDays > 0 ? 1 : 0 },
-      { name: 'Lip balm with SPF', qty: 1 },
-      { name: 'Blister plasters', qty: 1 },
-      { name: 'Scorecard & pencils', qty: 1 },
-      { name: 'Snacks / energy bars', qty: n * 2 },
-    ].filter(i => i.qty > 0),
+      hot ? { name: 'Sunscreen (SPF 50)',     qty: 1 } : null,
+      hot ? { name: 'Sunglasses',             qty: 1 } : null,
+      { name: 'Snack / energy bar',           qty: 1 },
+      { name: 'Water bottle',                 qty: 1 },
+    ].filter(Boolean),
+  };
+}
+
+// FULL TRIP: one polo + socks per round day, bottoms/layers based on weather spread
+function generateTripPacklist(days) {
+  const n       = days.length;
+  const hotDays = days.filter(d => d.avgTemp > 18).length;
+  const coldDays= days.filter(d => d.avgTemp <= 12).length;
+  const mildDays= n - hotDays - coldDays;
+  const rainyDays = days.filter(d => d.rainChance > 40).length;
+  const anyRain = rainyDays > 0;
+  const anyCold = coldDays > 0;
+  const anyHot  = hotDays > 0;
+
+  return {
+    clothing: [
+      { name: 'Golf polos / shirts',          qty: n },
+      hotDays > 0  ? { name: 'Golf shorts',   qty: hotDays } : null,
+      (coldDays + mildDays) > 0 ? { name: 'Golf trousers', qty: coldDays + mildDays } : null,
+      (anyCold || mildDays > 0) ? { name: 'Midlayer / pullover', qty: 1 } : null,
+      anyCold ? { name: 'Warm base layer',    qty: 1 } : null,
+      anyRain ? { name: 'Rain jacket',        qty: 1 } : null,
+      { name: 'Cap / visor',                  qty: 1 },
+      anyCold ? { name: 'Beanie',             qty: 1 } : null,
+      { name: 'Golf socks',                   qty: n + 1 },
+    ].filter(Boolean),
+    footwear: [
+      { name: 'Golf shoes',                   qty: 1 },
+      { name: 'Casual shoes / trainers',      qty: 1 },
+      anyHot ? { name: 'Flip flops / sandals', qty: 1 } : null,
+    ].filter(Boolean),
+    equipment: [
+      { name: 'Golf gloves',                  qty: anyRain ? 3 : 2 },
+      { name: 'Golf balls',                   qty: n * 4 },
+      { name: 'Tees (mixed)',                 qty: 30 },
+      { name: 'Golf towel',                   qty: 1 },
+      { name: 'Divot tool & ball marker',     qty: 1 },
+      { name: 'Rangefinder / GPS watch',      qty: 1 },
+      anyRain ? { name: 'Umbrella',           qty: 1 } : null,
+    ].filter(Boolean),
+    essentials: [
+      anyHot ? { name: 'Sunscreen (SPF 50)',  qty: 1 } : null,
+      anyHot ? { name: 'Sunglasses',          qty: 1 } : null,
+      { name: 'Lip balm with SPF',            qty: 1 },
+      { name: 'Blister plasters',             qty: 1 },
+      { name: 'Snacks / energy bars',         qty: n * 2 },
+      { name: 'Water bottle',                 qty: 1 },
+    ].filter(Boolean),
   };
 }
 
@@ -635,8 +676,7 @@ async function checkTrip() {
         : allDays.slice(0,5);
     }
 
-    const packDays = isOneDay ? [displayDays[0]] : displayDays;
-    const pack = generatePacklist(packDays);
+    const pack = isOneDay ? generateOneDayPacklist(displayDays[0]) : generateTripPacklist(displayDays);
 
     // Render weather + packlist immediately
     result.innerHTML = `
