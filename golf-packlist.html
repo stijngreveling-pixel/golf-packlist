@@ -12,350 +12,107 @@
     --green-bright: #52b788;
     --green-light: #b7e4c7;
     --gold: #c9a84c;
-    --gold-light: #f0d98a;
     --cream: #faf7f0;
     --text-dark: #12201a;
     --text-mid: #4a6358;
-    --shadow: 0 8px 40px rgba(26,58,42,0.13);
+    --shadow: 0 4px 24px rgba(26,58,42,0.10);
     --radius: 16px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--text-dark);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* HERO HEADER */
-  .hero {
-    background: var(--green-deep);
-    padding: 48px 24px 56px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 70% 0%, rgba(82,183,136,0.18) 0%, transparent 65%),
-                radial-gradient(ellipse at 20% 100%, rgba(201,168,76,0.12) 0%, transparent 50%);
-  }
-  .hero-flag {
-    font-size: 52px;
-    margin-bottom: 12px;
-    position: relative;
-    display: block;
-    animation: flagBounce 2s ease-in-out infinite;
-  }
-  @keyframes flagBounce {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 900;
-    color: var(--cream);
-    position: relative;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
-  }
+  .hero { background: var(--green-deep); padding: 40px 24px 48px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 0%, rgba(82,183,136,0.18) 0%, transparent 65%), radial-gradient(ellipse at 20% 100%, rgba(201,168,76,0.12) 0%, transparent 50%); }
+  .hero-flag { font-size: 48px; margin-bottom: 10px; position: relative; display: block; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,3rem); font-weight: 900; color: var(--cream); position: relative; }
   .hero h1 span { color: var(--gold); }
-  .hero p {
-    color: var(--green-light);
-    font-size: 1rem;
-    margin-top: 10px;
-    position: relative;
-    font-weight: 300;
-  }
+  .hero p { color: var(--green-light); font-size: 0.95rem; margin-top: 8px; position: relative; font-weight: 300; }
 
-  /* MODE TOGGLE */
-  .mode-toggle {
-    display: flex;
-    background: rgba(255,255,255,0.08);
-    border-radius: 40px;
-    padding: 4px;
-    width: fit-content;
-    margin: 24px auto 0;
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.12);
-  }
-  .mode-btn {
-    padding: 10px 24px;
-    border-radius: 36px;
-    border: none;
-    background: transparent;
-    color: rgba(255,255,255,0.55);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s;
-  }
-  .mode-btn.active {
-    background: var(--gold);
-    color: var(--green-deep);
-    font-weight: 600;
-  }
+  .container { max-width: 720px; margin: 0 auto; padding: 28px 20px 60px; }
 
-  /* FORM CARD */
-  .container { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
-
-  .form-card {
-    background: white;
-    border-radius: var(--radius);
-    padding: 32px;
-    box-shadow: var(--shadow);
-    margin-bottom: 32px;
-    animation: slideUp 0.4s ease both;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
-  .field label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-mid);
-  }
-  .field input, .field select {
-    padding: 13px 16px;
-    border: 1.5px solid #e2e8e4;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text-dark);
-    background: #fafcfb;
-    transition: border-color 0.2s;
-    outline: none;
-  }
-  .field input:focus, .field select:focus { border-color: var(--green-bright); background: white; }
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-  .submit-btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--green-deep);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.05rem;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 6px;
-  }
-  .submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,58,42,0.25); }
+  .form-card { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin-bottom: 28px; animation: slideUp 0.4s ease both; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); }
+  .field input { padding: 13px 16px; border: 1.5px solid #e2e8e4; border-radius: 10px; font-size: 1rem; font-family: 'DM Sans', sans-serif; color: var(--text-dark); background: #fafcfb; outline: none; transition: border-color 0.2s; }
+  .field input:focus { border-color: var(--green-bright); background: white; }
+  .submit-btn { width: 100%; padding: 15px; background: var(--green-deep); color: white; border: none; border-radius: 12px; font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; }
+  .submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,58,42,0.2); }
   .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
 
-  /* SPINNER */
-  .spinner {
-    width: 20px; height: 20px;
-    border: 2.5px solid rgba(255,255,255,0.35);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.75s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--green-deep); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 
-  /* RESULTS */
-  #result { animation: slideUp 0.5s ease both; }
+  /* TODAY CARD */
+  .today-card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 14px; border-left: 4px solid var(--green-bright); }
+  .today-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+  .today-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-bright); margin-bottom: 4px; }
+  .today-date { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+  .today-desc { font-size: 0.85rem; color: var(--text-mid); margin-top: 2px; text-transform: capitalize; }
+  .today-temp-block { text-align: right; }
+  .today-temp { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--green-deep); line-height: 1; }
+  .today-feels { font-size: 0.78rem; color: var(--text-mid); margin-top: 3px; }
+  .today-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .today-meta-item { font-size: 0.82rem; color: var(--text-mid); }
 
-  /* FORECAST TABLE */
-  .forecast-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-    overflow: hidden;
-  }
-  .forecast-header {
-    display: grid;
-    grid-template-columns: 1.4fr 0.7fr 1.1fr 1.1fr 1fr;
-    background: var(--green-deep);
-    padding: 10px 20px;
-    gap: 4px;
-  }
-  .forecast-header span {
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--green-light);
-  }
-  .forecast-row {
-    display: grid;
-    grid-template-columns: 1.4fr 0.7fr 1.1fr 1.1fr 1fr;
-    padding: 13px 20px;
-    gap: 4px;
-    align-items: center;
-    border-bottom: 1px solid #f0f4f2;
-    transition: background 0.15s;
-  }
-  .forecast-row:last-child { border-bottom: none; }
-  .forecast-row:hover { background: #f7faf8; }
-  .forecast-row.rainy { border-left: 3px solid #5a8fa0; }
-  .forecast-row.hot { border-left: 3px solid var(--gold); }
-  .forecast-row.cold { border-left: 3px solid #a0b4c8; }
-  .fdate { font-size: 0.88rem; font-weight: 600; color: var(--text-dark); }
-  .fdate small { display: block; font-size: 0.72rem; font-weight: 400; color: var(--text-mid); margin-top: 1px; }
-  .ficon { font-size: 1.5rem; text-align: center; }
-  .ftemp { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--green-deep); }
-  .ftemp small { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-mid); display: block; margin-top: 1px; }
-  .frain { font-size: 0.85rem; color: #5a8fa0; font-weight: 500; }
-  .frain-bar {
-    height: 5px;
-    background: #e8f0ed;
-    border-radius: 10px;
-    margin-top: 4px;
-    overflow: hidden;
-  }
-  .frain-fill {
-    height: 100%;
-    border-radius: 10px;
-    background: #5a8fa0;
-    transition: width 0.6s ease;
-  }
-  .fcond { font-size: 0.78rem; color: var(--text-mid); text-transform: capitalize; }
+  /* SLOTS */
+  .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .slot { background: #f7faf8; border-radius: 12px; padding: 14px; }
+  .slot-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 2px; }
+  .slot-time { font-size: 0.7rem; color: #8aab97; margin-bottom: 8px; }
+  .slot-icon { font-size: 1.3rem; margin-bottom: 4px; display: block; }
+  .slot-temp { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; color: var(--green-deep); }
+  .slot-feels { font-size: 0.72rem; color: var(--text-mid); margin-bottom: 4px; }
+  .slot-meta { font-size: 0.72rem; color: var(--text-mid); margin-bottom: 6px; }
+  .slot-wear { margin-top: 8px; border-top: 1px solid #e8f0ec; padding-top: 8px; }
+  .slot-wear-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 5px; }
+  .slot-item { font-size: 0.78rem; color: var(--text-dark); margin-bottom: 3px; }
 
-  /* SECTION TITLES */
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--green-deep);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  /* WEEK GRID */
+  .week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 28px; }
+  .week-card { background: white; border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border-top: 3px solid var(--green-bright); }
+  .week-card.rainy { border-top-color: #5a8fa0; }
+  .week-card.cold  { border-top-color: #a0b4c8; }
+  .week-card.hot   { border-top-color: var(--gold); }
+  .wc-day { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 4px; }
+  .wc-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+  .wc-temp { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--green-deep); }
+  .wc-range { font-size: 0.72rem; color: var(--text-mid); margin-bottom: 5px; }
+  .wc-rain { font-size: 0.75rem; color: #5a8fa0; }
+  .wc-wind { font-size: 0.75rem; color: var(--text-mid); margin-top: 2px; }
+  .wc-desc { font-size: 0.72rem; color: var(--text-mid); margin-top: 4px; text-transform: capitalize; }
+  .rain-bar { height: 4px; background: #e8f0ed; border-radius: 10px; margin-top: 3px; overflow: hidden; }
+  .rain-fill { height: 100%; border-radius: 10px; background: #5a8fa0; }
 
-  /* PACKLIST */
-  .packlist-card {
-    background: white;
-    border-radius: var(--radius);
-    padding: 28px;
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-  }
-  .pack-category { margin-bottom: 22px; }
+  /* PACK LIST */
+  .packlist-card { background: white; border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .pack-category { margin-bottom: 20px; }
   .pack-category:last-child { margin-bottom: 0; }
-  .pack-cat-title {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #f0e8d0;
-  }
+  .pack-cat-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f0e8d0; }
   .pack-items { display: flex; flex-direction: column; gap: 7px; }
-  .pack-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.95rem;
-    color: var(--text-dark);
-  }
-  .pack-check {
-    width: 22px; height: 22px;
-    background: var(--green-bright);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
-  }
-  .pack-qty {
-    margin-left: auto;
-    background: var(--green-light);
-    color: var(--green-deep);
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 2px 9px;
-    border-radius: 20px;
-  }
+  .pack-item { display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-dark); }
+  .pack-check { width: 20px; height: 20px; background: var(--green-bright); border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.65rem; font-weight: 700; }
+  .pack-qty { margin-left: auto; background: var(--green-light); color: var(--green-deep); font-size: 0.75rem; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
 
-  /* AI ADVICE CARD */
-  .ai-card {
-    background: var(--green-deep);
-    border-radius: var(--radius);
-    padding: 28px;
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .ai-card::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 160px; height: 160px;
-    background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%);
-  }
+  /* AI CARD */
+  .ai-card { background: var(--green-deep); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); margin-bottom: 16px; position: relative; overflow: hidden; }
+  .ai-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%); }
   .ai-card .section-title { color: var(--gold); }
-  .ai-card .section-title svg { opacity: 0.9; }
-  .ai-advice-text {
-    color: rgba(255,255,255,0.88);
-    font-size: 0.95rem;
-    line-height: 1.75;
-    position: relative;
-  }
+  .ai-advice-text { color: rgba(255,255,255,0.88); font-size: 0.92rem; line-height: 1.75; position: relative; }
   .ai-advice-text p { margin-bottom: 10px; }
   .ai-advice-text p:last-child { margin-bottom: 0; }
 
-  /* LOADING SKELETON */
-  .skeleton {
-    background: linear-gradient(90deg, #f0f4f2 25%, #e2ebe6 50%, #f0f4f2 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
-    border-radius: 8px;
-    height: 16px;
-    margin-bottom: 8px;
-  }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .skeleton { background: linear-gradient(90deg,#f0f4f2 25%,#e2ebe6 50%,#f0f4f2 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; height: 14px; margin-bottom: 8px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-  /* ALERT */
-  .alert {
-    background: #fff3cd;
-    border-left: 4px solid var(--gold);
-    padding: 14px 18px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    color: #7a5a00;
-    margin-bottom: 20px;
-  }
+  .alert { background: #fff3cd; border-left: 4px solid var(--gold); padding: 14px 18px; border-radius: 10px; font-size: 0.9rem; color: #7a5a00; margin-bottom: 20px; }
+  #result { animation: slideUp 0.4s ease both; }
 
-  /* ONE DAY BADGE */
-  .badge {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--green-deep);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 12px;
-    border-radius: 20px;
-    margin-left: 10px;
+  @media (max-width: 520px) {
+    .slots { grid-template-columns: 1fr; }
+    .week-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -364,11 +121,7 @@
 <div class="hero">
   <span class="hero-flag">⛳</span>
   <h1>Golf Trip <span>Packer</span></h1>
-  <p>Weather-smart packing advice for your perfect round</p>
-  <div class="mode-toggle">
-    <button class="mode-btn active" id="btn-trip" onclick="setMode('trip')">🧳 Full Trip</button>
-    <button class="mode-btn" id="btn-oneday" onclick="setMode('oneday')">📅 One Day</button>
-  </div>
+  <p>Weather-smart packing for your perfect round</p>
 </div>
 
 <div class="container">
@@ -377,47 +130,40 @@
       <label>Destination</label>
       <input id="location" placeholder="e.g. Marbella, Algarve, St Andrews" />
     </div>
-
-    <div class="field-row" id="trip-dates">
-      <div class="field">
-        <label>Start date</label>
-        <input id="start" type="date" />
-      </div>
-      <div class="field">
-        <label>End date</label>
-        <input id="end" type="date" />
-      </div>
-    </div>
-    <div class="field" id="oneday-date" style="display:none;">
-      <label>Date of your round</label>
-      <input id="singleday" type="date" />
-    </div>
     <button class="submit-btn" id="main-btn" onclick="checkTrip()">
       <span>Check my golf packer</span>
     </button>
   </div>
-
   <div id="result"></div>
 </div>
 
 <script>
 const OWM_KEY = "1ce0986759677cf92a04e4d1097e5d3a";
-let currentMode = 'trip';
-
-function setMode(mode) {
-  currentMode = mode;
-  document.getElementById('btn-trip').classList.toggle('active', mode === 'trip');
-  document.getElementById('btn-oneday').classList.toggle('active', mode === 'oneday');
-  document.getElementById('trip-dates').style.display = mode === 'trip' ? 'grid' : 'none';
-  document.getElementById('oneday-date').style.display = mode === 'oneday' ? 'flex' : 'none';
-  document.getElementById('result').innerHTML = '';
-}
 
 async function getWeather(city) {
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${OWM_KEY}&units=metric`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error('City not found');
+  if (!res.ok) throw new Error('Not found');
   return res.json();
+}
+
+function getSlotItems(items, fromH, toH) {
+  return items.filter(i => {
+    const h = parseInt(i.dt_txt.split(' ')[1].split(':')[0]);
+    return h >= fromH && h < toH;
+  });
+}
+
+function calcSlot(items) {
+  if (!items.length) return null;
+  const mid = items[Math.floor(items.length / 2)];
+  return {
+    temp:  items.reduce((a,b) => a + b.main.temp, 0) / items.length,
+    feels: items.reduce((a,b) => a + b.main.feels_like, 0) / items.length,
+    rain:  Math.max(...items.map(i => i.pop)) * 100,
+    wind:  items.reduce((a,b) => a + b.wind.speed, 0) / items.length,
+    desc:  mid.weather[0].description,
+  };
 }
 
 function groupDaily(list) {
@@ -433,15 +179,21 @@ function groupDaily(list) {
 function processDays(grouped) {
   return Object.entries(grouped).map(([date, items]) => {
     const temps = items.map(i => i.main.temp);
-    const rain = items.map(i => i.pop);
-    const desc = items[Math.floor(items.length/2)].weather[0].description;
+    const feels = items.map(i => i.main.feels_like);
+    const winds = items.map(i => i.wind.speed);
+    const mid   = items[Math.floor(items.length / 2)];
     return {
       date,
-      avgTemp: temps.reduce((a,b)=>a+b,0)/temps.length,
-      minTemp: Math.min(...temps),
-      maxTemp: Math.max(...temps),
-      rainChance: Math.max(...rain)*100,
-      desc
+      avgTemp:    temps.reduce((a,b)=>a+b,0)/temps.length,
+      feelsLike:  feels.reduce((a,b)=>a+b,0)/feels.length,
+      minTemp:    Math.min(...temps),
+      maxTemp:    Math.max(...temps),
+      rainChance: Math.max(...items.map(i=>i.pop))*100,
+      windSpeed:  winds.reduce((a,b)=>a+b,0)/winds.length,
+      desc:       mid.weather[0].description,
+      morning:    calcSlot(getSlotItems(items, 6, 12)),
+      afternoon:  calcSlot(getSlotItems(items, 12, 18)),
+      evening:    calcSlot(getSlotItems(items, 18, 24).concat(getSlotItems(items, 0, 6))),
     };
   });
 }
@@ -449,201 +201,177 @@ function processDays(grouped) {
 function weatherIcon(temp, rain, desc) {
   if (rain > 60) return '🌧️';
   if (rain > 30) return '🌦️';
+  if (desc.includes('thunder')) return '⛈️';
+  if (desc.includes('snow')) return '❄️';
+  if (desc.includes('mist') || desc.includes('fog')) return '🌫️';
   if (desc.includes('cloud')) return '⛅';
   if (temp > 25) return '☀️';
   if (temp > 18) return '🌤️';
   return '🌥️';
 }
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+function formatDate(str) {
+  return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+}
+function formatShort(str) {
+  return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
 }
 
-// ONE DAY: minimal, weather-smart list for a single round
-function generateOneDayPacklist(day) {
-  const hot   = day.avgTemp > 18;
-  const cold  = day.avgTemp <= 12;
-  const mild  = !hot && !cold;
-  const rainy = day.rainChance > 40;
-
-  return {
-    clothing: [
-      { name: '1 golf polo / shirt',         qty: 1 },
-      hot  ? { name: 'Golf shorts',           qty: 1 } : null,
-      !hot ? { name: 'Golf trousers',         qty: 1 } : null,
-      (cold || mild) ? { name: 'Midlayer / pullover', qty: 1 } : null,
-      cold ? { name: 'Warm base layer',       qty: 1 } : null,
-      rainy ? { name: 'Rain jacket',          qty: 1 } : null,
-      { name: 'Cap / visor',                  qty: 1 },
-      cold ? { name: 'Beanie',                qty: 1 } : null,
-      { name: 'Golf socks',                   qty: 1 },
-    ].filter(Boolean),
-    footwear: [
-      { name: 'Golf shoes',                   qty: 1 },
-    ],
-    equipment: [
-      { name: 'Golf glove',                   qty: rainy ? 2 : 1 },
-      { name: 'Golf balls (sleeve)',           qty: 3 },
-      { name: 'Tees',                         qty: 10 },
-      { name: 'Divot tool & ball marker',     qty: 1 },
-      { name: 'Golf towel',                   qty: 1 },
-      rainy ? { name: 'Umbrella',             qty: 1 } : null,
-    ].filter(Boolean),
-    essentials: [
-      hot ? { name: 'Sunscreen (SPF 50)',     qty: 1 } : null,
-      hot ? { name: 'Sunglasses',             qty: 1 } : null,
-      { name: 'Snack / energy bar',           qty: 1 },
-      { name: 'Water bottle',                 qty: 1 },
-    ].filter(Boolean),
-  };
+function golfOutfit(temp, rain, wind) {
+  if (temp === null) return [];
+  const items = [];
+  const hot   = temp > 18;
+  const cold  = temp <= 12;
+  const windy = wind > 5;
+  const rainy = rain > 40;
+  items.push(hot ? '🩳 Golf shorts' : '👖 Golf trousers');
+  items.push('👕 Golf polo');
+  if (cold)  items.push('🧥 Base layer');
+  if (!hot)  items.push('🧣 Midlayer / pullover');
+  if (rainy) items.push('🌧️ Rain jacket');
+  else if (windy) items.push('🍃 Wind jacket');
+  if (cold || windy) items.push('🧤 Extra glove');
+  items.push(cold ? '🧢 Beanie' : '🧢 Cap / visor');
+  return items;
 }
 
-// FULL TRIP: one polo + socks per round day, bottoms/layers based on weather spread
-function generateTripPacklist(days) {
-  const n       = days.length;
-  const hotDays = days.filter(d => d.avgTemp > 18).length;
-  const coldDays= days.filter(d => d.avgTemp <= 12).length;
-  const mildDays= n - hotDays - coldDays;
-  const rainyDays = days.filter(d => d.rainChance > 40).length;
-  const anyRain = rainyDays > 0;
-  const anyCold = coldDays > 0;
-  const anyHot  = hotDays > 0;
-
-  return {
-    clothing: [
-      { name: 'Golf polos / shirts',          qty: n },
-      hotDays > 0  ? { name: 'Golf shorts',   qty: hotDays } : null,
-      (coldDays + mildDays) > 0 ? { name: 'Golf trousers', qty: coldDays + mildDays } : null,
-      (anyCold || mildDays > 0) ? { name: 'Midlayer / pullover', qty: 1 } : null,
-      anyCold ? { name: 'Warm base layer',    qty: 1 } : null,
-      anyRain ? { name: 'Rain jacket',        qty: 1 } : null,
-      { name: 'Cap / visor',                  qty: 1 },
-      anyCold ? { name: 'Beanie',             qty: 1 } : null,
-      { name: 'Golf socks',                   qty: n + 1 },
-    ].filter(Boolean),
-    footwear: [
-      { name: 'Golf shoes',                   qty: 1 },
-      { name: 'Casual shoes / trainers',      qty: 1 },
-      anyHot ? { name: 'Flip flops / sandals', qty: 1 } : null,
-    ].filter(Boolean),
-    equipment: [
-      { name: 'Golf gloves',                  qty: anyRain ? 3 : 2 },
-      { name: 'Golf balls',                   qty: n * 4 },
-      { name: 'Tees (mixed)',                 qty: 30 },
-      { name: 'Golf towel',                   qty: 1 },
-      { name: 'Divot tool & ball marker',     qty: 1 },
-      { name: 'Rangefinder / GPS watch',      qty: 1 },
-      anyRain ? { name: 'Umbrella',           qty: 1 } : null,
-    ].filter(Boolean),
-    essentials: [
-      anyHot ? { name: 'Sunscreen (SPF 50)',  qty: 1 } : null,
-      anyHot ? { name: 'Sunglasses',          qty: 1 } : null,
-      { name: 'Lip balm with SPF',            qty: 1 },
-      { name: 'Blister plasters',             qty: 1 },
-      { name: 'Snacks / energy bars',         qty: n * 2 },
-      { name: 'Water bottle',                 qty: 1 },
-    ].filter(Boolean),
-  };
-}
-
-function renderForecastTable(days) {
-  const rowClass = d => d.rainChance > 50 ? 'rainy' : d.avgTemp > 23 ? 'hot' : d.avgTemp < 15 ? 'cold' : '';
-  return `<div class="forecast-card">
-    <div class="forecast-header">
-      <span>Day</span>
-      <span style="text-align:center">Sky</span>
-      <span>Temp</span>
-      <span>Rain</span>
-      <span>Conditions</span>
+function renderSlot(label, time, slot) {
+  if (!slot) return `<div class="slot"><div class="slot-label">${label}</div><div class="slot-time">${time}</div><div style="font-size:0.8rem;color:#ccc;margin-top:8px">No data</div></div>`;
+  const outfit = golfOutfit(slot.temp, slot.rain, slot.wind);
+  return `<div class="slot">
+    <div class="slot-label">${label}</div>
+    <div class="slot-time">${time}</div>
+    <span class="slot-icon">${weatherIcon(slot.temp, slot.rain, slot.desc)}</span>
+    <div class="slot-temp">${slot.temp.toFixed(0)}°</div>
+    <div class="slot-feels">Feels ${slot.feels.toFixed(0)}°</div>
+    <div class="slot-meta">💧 ${slot.rain.toFixed(0)}% · 💨 ${(slot.wind*3.6).toFixed(0)} km/h</div>
+    <div class="slot-wear">
+      <div class="slot-wear-title">Wear today</div>
+      ${outfit.map(i=>`<div class="slot-item">${i}</div>`).join('')}
     </div>
-    ${days.map(d => `
-      <div class="forecast-row ${rowClass(d)}">
-        <div class="fdate">${formatDate(d.date).split(',')[0]}<small>${formatDate(d.date).split(',').slice(1).join(',').trim()}</small></div>
-        <div class="ficon">${weatherIcon(d.avgTemp, d.rainChance, d.desc)}</div>
-        <div class="ftemp">${d.avgTemp.toFixed(0)}°C<small>${d.minTemp.toFixed(0)}° – ${d.maxTemp.toFixed(0)}°</small></div>
-        <div class="frain">${d.rainChance.toFixed(0)}%
-          <div class="frain-bar"><div class="frain-fill" style="width:${Math.min(d.rainChance,100)}%"></div></div>
-        </div>
-        <div class="fcond">${d.desc}</div>
-      </div>
-    `).join('')}
   </div>`;
 }
 
-function renderPacklist(pack, isOneDay) {
+function weekCardClass(d) {
+  if (d.rainChance > 50) return 'rainy';
+  if (d.avgTemp > 18) return 'hot';
+  if (d.avgTemp <= 12) return 'cold';
+  return '';
+}
+
+function renderWeekCard(d) {
+  return `<div class="week-card ${weekCardClass(d)}">
+    <div class="wc-day">${formatShort(d.date)}</div>
+    <span class="wc-icon">${weatherIcon(d.avgTemp, d.rainChance, d.desc)}</span>
+    <div class="wc-temp">${d.avgTemp.toFixed(0)}°C</div>
+    <div class="wc-range">${d.minTemp.toFixed(0)}° – ${d.maxTemp.toFixed(0)}°</div>
+    <div class="wc-rain">💧 ${d.rainChance.toFixed(0)}%
+      <div class="rain-bar"><div class="rain-fill" style="width:${Math.min(d.rainChance,100)}%"></div></div>
+    </div>
+    <div class="wc-wind">💨 ${(d.windSpeed*3.6).toFixed(0)} km/h</div>
+    <div class="wc-desc">${d.desc}</div>
+  </div>`;
+}
+
+function generatePacklist(days) {
+  const n        = days.length;
+  const hotDays  = days.filter(d => d.avgTemp > 18).length;
+  const coldDays = days.filter(d => d.avgTemp <= 12).length;
+  const mildDays = n - hotDays - coldDays;
+  const anyRain  = days.some(d => d.rainChance > 40);
+  const anyCold  = coldDays > 0;
+  const anyHot   = hotDays > 0;
+  const anyWind  = days.some(d => d.windSpeed > 5);
+  return {
+    clothing: [
+      { name: 'Golf polos / shirts',      qty: n },
+      hotDays > 0 ? { name: 'Golf shorts', qty: hotDays } : null,
+      (coldDays+mildDays) > 0 ? { name: 'Golf trousers', qty: coldDays+mildDays } : null,
+      (anyCold||mildDays>0) ? { name: 'Midlayer / pullover', qty: 1 } : null,
+      anyCold ? { name: 'Warm base layer', qty: 1 } : null,
+      anyRain  ? { name: 'Rain jacket',   qty: 1 } : null,
+      (anyWind&&!anyRain) ? { name: 'Wind jacket', qty: 1 } : null,
+      { name: 'Cap / visor',              qty: 1 },
+      anyCold  ? { name: 'Beanie',        qty: 1 } : null,
+      { name: 'Golf socks',               qty: n + 1 },
+    ].filter(Boolean),
+    footwear: [
+      { name: 'Golf shoes',               qty: 1 },
+      { name: 'Casual shoes / trainers',  qty: 1 },
+      anyHot ? { name: 'Flip flops',      qty: 1 } : null,
+    ].filter(Boolean),
+    equipment: [
+      { name: 'Golf gloves',              qty: anyRain ? 3 : 2 },
+      { name: 'Golf balls',               qty: n * 4 },
+      { name: 'Tees (mixed)',             qty: 30 },
+      { name: 'Golf towel',               qty: 1 },
+      { name: 'Divot tool & ball marker', qty: 1 },
+      { name: 'Rangefinder / GPS watch',  qty: 1 },
+      anyRain ? { name: 'Umbrella',       qty: 1 } : null,
+    ].filter(Boolean),
+    essentials: [
+      anyHot  ? { name: 'Sunscreen SPF 50', qty: 1 } : null,
+      anyHot  ? { name: 'Sunglasses',       qty: 1 } : null,
+      { name: 'Lip balm with SPF',          qty: 1 },
+      { name: 'Blister plasters',           qty: 1 },
+      { name: 'Snacks / energy bars',       qty: n * 2 },
+      { name: 'Water bottle',               qty: 1 },
+    ].filter(Boolean),
+  };
+}
+
+function renderPacklist(pack) {
   const cats = [
-    { key:'clothing', label:'👕 Clothing', items: pack.clothing },
-    { key:'footwear', label:'👟 Footwear', items: pack.footwear },
-    { key:'equipment', label:'🏌️ Equipment', items: pack.equipment },
-    { key:'essentials', label:'🧴 Essentials', items: pack.essentials },
+    { label:'👕 Clothing',   items: pack.clothing },
+    { label:'👟 Footwear',   items: pack.footwear },
+    { label:'🏌️ Equipment', items: pack.equipment },
+    { label:'🧴 Essentials', items: pack.essentials },
   ];
   return `<div class="packlist-card">
-    <div class="section-title">🎒 Your Pack List${isOneDay ? '<span class="badge">One Day</span>' : ''}</div>
-    ${cats.map(cat => `
+    <div class="section-title">🎒 Your Pack List</div>
+    ${cats.map(cat=>`
       <div class="pack-category">
         <div class="pack-cat-title">${cat.label}</div>
         <div class="pack-items">
-          ${cat.items.map(item => `
+          ${cat.items.map(item=>`
             <div class="pack-item">
               <div class="pack-check">✓</div>
               <span>${item.name}</span>
               ${item.qty > 1 ? `<span class="pack-qty">×${item.qty}</span>` : ''}
-            </div>
-          `).join('')}
+            </div>`).join('')}
         </div>
-      </div>
-    `).join('')}
+      </div>`).join('')}
   </div>`;
 }
 
-async function getAIAdvice(location, days, isOneDay) {
-  const weatherSummary = days.map(d =>
-    `${d.date}: ${d.avgTemp.toFixed(1)}°C, ${d.rainChance.toFixed(0)}% rain, ${d.desc}`
+async function getAIAdvice(location, days) {
+  const summary = days.map(d =>
+    `${d.date}: avg ${d.avgTemp.toFixed(0)}°C (feels ${d.feelsLike.toFixed(0)}°), wind ${(d.windSpeed*3.6).toFixed(0)} km/h, rain ${d.rainChance.toFixed(0)}%, ${d.desc}`
   ).join('\n');
+  const prompt = `You are a seasoned golf travel expert. A golfer is heading to ${location} for ${days.length} day(s).
 
-  const prompt = isOneDay
-    ? `You are an experienced golf caddie. A golfer is playing one round in ${location} on ${days[0]?.date}.
+Weather:
+${summary}
 
-Weather: ${weatherSummary}
+Give practical golf advice in 3 short paragraphs:
+1. How to dress for these conditions (specific and opinionated)
+2. Key equipment or extras to bring
+3. One sharp insider tip for golfing in ${location}
 
-Give a sharp, practical 3-paragraph briefing covering:
-1. What to wear for the specific weather (be precise and opinionated)
-2. On-course strategy advice for these conditions (wind, wet ground, etc.)
-3. One key tip to make the most of the day
+Be confident and concise. No filler.`;
 
-Be confident, expert, and engaging. No filler.`
-    : `You are a seasoned golf travel expert. A golfer is taking a multi-day trip in ${location}.
-
-Weather forecast:
-${weatherSummary}
-
-Give expert packing advice in 3 focused paragraphs:
-1. How to dress smartly for the varying conditions across the trip
-2. What key equipment or extras to bring based on the forecast
-3. One insider tip for golfing in ${location}
-
-Be specific, practical, and enthusiastic. No generic filler.`;
-
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }]
-    })
+    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
   });
-
-  if (!response.ok) throw new Error('AI unavailable');
-  const data = await response.json();
-  return data.content.map(b => b.text || '').join('');
+  if (!res.ok) throw new Error('AI unavailable');
+  const data = await res.json();
+  return data.content.map(b => b.text||'').join('');
 }
 
 async function checkTrip() {
   const city = document.getElementById('location').value.trim();
-  const isOneDay = currentMode === 'oneday';
-
   if (!city) { alert('Please enter a destination.'); return; }
 
   const btn = document.getElementById('main-btn');
@@ -651,61 +379,64 @@ async function checkTrip() {
   btn.innerHTML = `<div class="spinner"></div><span>Loading…</span>`;
 
   const result = document.getElementById('result');
-  result.innerHTML = `<div class="packlist-card">
-    <div class="skeleton" style="width:60%;height:22px;margin-bottom:20px"></div>
-    <div class="skeleton"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:90%"></div>
-  </div>`;
+  result.innerHTML = `<div class="packlist-card"><div class="skeleton" style="width:50%;height:20px;margin-bottom:16px"></div><div class="skeleton"></div><div class="skeleton" style="width:80%"></div></div>`;
 
   try {
-    const weatherData = await getWeather(city);
-    const grouped = groupDaily(weatherData.list);
-    let allDays = processDays(grouped);
+    const data   = await getWeather(city);
+    const allDays = processDays(groupDaily(data.list)).slice(0, 5);
+    const today   = allDays[0];
+    const rest    = allDays.slice(1);
+    const pack    = generatePacklist(allDays);
 
-    let displayDays;
-    if (isOneDay) {
-      const target = document.getElementById('singleday').value;
-      displayDays = target
-        ? allDays.filter(d => d.date === target).slice(0,1)
-        : allDays.slice(0,1);
-      if (!displayDays.length) displayDays = allDays.slice(0,1);
-    } else {
-      const start = document.getElementById('start').value;
-      const end = document.getElementById('end').value;
-      displayDays = (start && end)
-        ? allDays.filter(d => d.date >= start && d.date <= end).slice(0,6)
-        : allDays.slice(0,5);
-    }
-
-    const pack = isOneDay ? generateOneDayPacklist(displayDays[0]) : generateTripPacklist(displayDays);
-
-    // Render weather + packlist immediately
     result.innerHTML = `
-      <div class="section-title">🌤️ Weather Forecast</div>
-      ${renderForecastTable(displayDays)}
-      ${renderPacklist(pack, isOneDay)}
+      <div class="section-title">⛳ Today's Forecast</div>
+      <div class="today-card">
+        <div class="today-top">
+          <div>
+            <div class="today-label">Today's Round</div>
+            <div class="today-date">${formatDate(today.date)}</div>
+            <div class="today-desc">${weatherIcon(today.avgTemp, today.rainChance, today.desc)} ${today.desc}</div>
+          </div>
+          <div class="today-temp-block">
+            <div class="today-temp">${today.avgTemp.toFixed(0)}°C</div>
+            <div class="today-feels">Feels ${today.feelsLike.toFixed(0)}°</div>
+          </div>
+        </div>
+        <div class="today-meta">
+          <div class="today-meta-item">🌡️ ${today.minTemp.toFixed(0)}° – ${today.maxTemp.toFixed(0)}°</div>
+          <div class="today-meta-item">💧 ${today.rainChance.toFixed(0)}% rain</div>
+          <div class="today-meta-item">💨 ${(today.windSpeed*3.6).toFixed(0)} km/h</div>
+        </div>
+        <div class="slots">
+          ${renderSlot('Morning','06:00–12:00', today.morning)}
+          ${renderSlot('Afternoon','12:00–18:00', today.afternoon)}
+          ${renderSlot('Evening','18:00–22:00', today.evening)}
+        </div>
+      </div>
+
+      ${rest.length ? `
+        <div class="section-title" style="margin-top:28px">📅 Next ${rest.length} Days</div>
+        <div class="week-grid">${rest.map(renderWeekCard).join('')}</div>` : ''}
+
+      ${renderPacklist(pack)}
+
       <div class="ai-card" id="ai-section">
         <div class="section-title">✨ Expert Advice</div>
         <div class="ai-advice-text">
           <div class="skeleton"></div>
           <div class="skeleton" style="width:90%"></div>
-          <div class="skeleton" style="width:75%"></div>
+          <div class="skeleton" style="width:70%"></div>
         </div>
-      </div>
-    `;
+      </div>`;
 
-    // Load AI advice async
-    getAIAdvice(city, displayDays, isOneDay).then(advice => {
-      const aiSection = document.getElementById('ai-section');
-      if (aiSection) {
-        aiSection.querySelector('.ai-advice-text').innerHTML =
-          advice.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('');
-      }
+    getAIAdvice(city, allDays).then(advice => {
+      const el = document.getElementById('ai-section');
+      if (el) el.querySelector('.ai-advice-text').innerHTML =
+        advice.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('');
     }).catch(() => {
-      const aiSection = document.getElementById('ai-section');
-      if (aiSection) {
-        aiSection.querySelector('.ai-advice-text').innerHTML =
-          '<p>AI advice unavailable at the moment — but your packing list above is weather-ready! ⛳</p>';
-      }
+      const el = document.getElementById('ai-section');
+      if (el) el.querySelector('.ai-advice-text').innerHTML =
+        '<p>AI advice unavailable right now — your pack list is weather-ready! ⛳</p>';
     });
 
   } catch(err) {
