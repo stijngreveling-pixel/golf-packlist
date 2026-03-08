@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golf Trip Packlist</title>
+<style>
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#eef2f5;
+margin:0;
+padding:40px;
+text-align:center;
+}
+
+h1{
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+max-width:500px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+input,select{
+padding:10px;
+border-radius:6px;
+border:1px solid #ddd;
+font-size:16px;
+}
+
+button{
+padding:12px;
+border:none;
+background:#1e7e34;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#166528;
+}
+
+#result{
+margin-top:40px;
+max-width:700px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.weather-day{
+background:white;
+padding:15px;
+border-radius:10px;
+margin:10px 0;
+box-shadow:0 6px 15px rgba(0,0,0,0.06);
+}
+
+.packlist{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+box-shadow:0 6px 15px rgba(0,0,0,0.06);
+}
+
+</style>
+</head>
+<body>
+
+<h1>⛳ Golf Trip Outfit & Packlist Checker</h1>
+
+<div class="card">
+<label>Location</label>
+<input id="location" placeholder="Marbella" />
+
+<label>Golf Course (optional)</label>
+<select id="course">
+<option value="">Select course</option>
+<option>Valderrama</option>
+<option>La Cala</option>
+<option>Quinta do Lago</option>
+<option>Finca Cortesin</option>
+<option>Royal Portrush</option>
+</select>
+
+<label>Start date</label>
+<input id="start" type="date" />
+
+<label>End date</label>
+<input id="end" type="date" />
+
+<button onclick="checkTrip()">Check my golf packlist</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+
+const API_KEY = "1ce0986759677cf92a04e4d1097e5d3a";
+
+async function getWeather(city){
+
+const url=`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
+
+const res=await fetch(url);
+const data=await res.json();
+
+return data;
+}
+
+function groupDailyForecast(list){
+
+const days={};
+
+list.forEach(item=>{
+
+const date=item.dt_txt.split(" ")[0];
+
+if(!days[date]) days[date]=[];
+
+days[date].push(item);
+
+});
+
+return days;
+
+}
+
+function calculateDailyAverages(days){
+
+let result=[];
+
+for(const date in days){
+
+let temps=days[date].map(i=>i.main.temp);
+
+let rain=days[date].map(i=>i.pop);
+
+let avgTemp=temps.reduce((a,b)=>a+b,0)/temps.length;
+
+let rainChance=Math.max(...rain)*100;
+
+result.push({date,avgTemp,rainChance});
+
+}
+
+return result;
+
+}
+
+function generatePacklist(days){
+
+let polos=days.length;
+let shorts=0;
+let pants=0;
+let pullovers=0;
+let rainjacket=false;
+
+
+
+for(const d of days){
+
+if(d.avgTemp>22) shorts++;
+else pants++;
+
+if(d.avgTemp<18) pullovers=1;
+
+if(d.rainChance>40) rainjacket=true;
+
+}
+
+return{
+polos,
+shorts,
+pants,
+pullovers,
+rainjacket
+}
+
+}
+
+function renderWeather(days){
+
+return days.map(d=>`
+<div class="weather-day">
+<b>${d.date}</b><br>
+Temperature: ${d.avgTemp.toFixed(1)}°C<br>
+Rain chance: ${d.rainChance.toFixed(0)}%
+</div>
+`).join("");
+
+}
+
+function renderPacklist(p){
+
+return `
+<div class="packlist">
+<h2>🎒 Golf Packlist</h2>
+
+<div>✔ ${p.polos} polos</div>
+<div>✔ ${p.shorts} shorts</div>
+<div>✔ ${p.pants} golf trousers</div>
+<div>✔ ${p.pullovers} pullover</div>
+${p.rainjacket ? '<div>✔ Rain jacket</div>' : ''}
+<div>✔ Golf shoes</div>
+<div>✔ 2 gloves</div>
+<div>✔ 12 golf balls</div>
+</div>
+`;
+
+}
+
+async function checkTrip(){
+
+const city=document.getElementById("location").value;
+
+const weather=await getWeather(city);
+
+const daysGrouped=groupDailyForecast(weather.list);
+
+const days=calculateDailyAverages(daysGrouped).slice(0,5);
+
+const packlist=generatePacklist(days);
+
+
+
+document.getElementById("result").innerHTML=`
+
+<h2>Weather forecast</h2>
+
+${renderWeather(days)}
+
+${renderPacklist(packlist)}
+
+`;
+
+}
+
+</script>
+
+</body>
+</html>

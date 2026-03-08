@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golf Trip Packer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a2a;
+    --green-mid: #2d6a4f;
+    --green-bright: #52b788;
+    --green-light: #b7e4c7;
+    --gold: #c9a84c;
+    --gold-light: #f0d98a;
+    --cream: #faf7f0;
+    --text-dark: #12201a;
+    --text-mid: #4a6358;
+    --shadow: 0 8px 40px rgba(26,58,42,0.13);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO HEADER */
+  .hero {
+    background: var(--green-deep);
+    padding: 48px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 0%, rgba(82,183,136,0.18) 0%, transparent 65%),
+                radial-gradient(ellipse at 20% 100%, rgba(201,168,76,0.12) 0%, transparent 50%);
+  }
+  .hero-flag {
+    font-size: 52px;
+    margin-bottom: 12px;
+    position: relative;
+    display: block;
+    animation: flagBounce 2s ease-in-out infinite;
+  }
+  @keyframes flagBounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    color: var(--cream);
+    position: relative;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    color: var(--green-light);
+    font-size: 1rem;
+    margin-top: 10px;
+    position: relative;
+    font-weight: 300;
+  }
+
+  /* MODE TOGGLE */
+  .mode-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.08);
+    border-radius: 40px;
+    padding: 4px;
+    width: fit-content;
+    margin: 24px auto 0;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .mode-btn {
+    padding: 10px 24px;
+    border-radius: 36px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .mode-btn.active {
+    background: var(--gold);
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+
+  /* FORM CARD */
+  .container { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  .form-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 32px;
+    animation: slideUp 0.4s ease both;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .field label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+  }
+  .field input, .field select {
+    padding: 13px 16px;
+    border: 1.5px solid #e2e8e4;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dark);
+    background: #fafcfb;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus { border-color: var(--green-bright); background: white; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--green-deep);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,58,42,0.25); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* SPINNER */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2.5px solid rgba(255,255,255,0.35);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* RESULTS */
+  #result { animation: slideUp 0.5s ease both; }
+
+  /* WEATHER STRIP */
+  .weather-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
+  .weather-strip::-webkit-scrollbar { display: none; }
+  .weather-card {
+    flex: 0 0 auto;
+    background: white;
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-align: center;
+    min-width: 110px;
+    box-shadow: var(--shadow);
+    border-top: 3px solid var(--green-bright);
+  }
+  .weather-card .wdate { font-size: 0.72rem; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .weather-card .wtemp { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--green-deep); line-height: 1; }
+  .weather-card .wrain { font-size: 0.78rem; color: #5a8fa0; margin-top: 5px; }
+  .weather-card .wicon { font-size: 1.4rem; margin-bottom: 4px; display: block; }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--green-deep);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* PACKLIST */
+  .packlist-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .pack-category { margin-bottom: 22px; }
+  .pack-category:last-child { margin-bottom: 0; }
+  .pack-cat-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #f0e8d0;
+  }
+  .pack-items { display: flex; flex-direction: column; gap: 7px; }
+  .pack-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+  }
+  .pack-check {
+    width: 22px; height: 22px;
+    background: var(--green-bright);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .pack-qty {
+    margin-left: auto;
+    background: var(--green-light);
+    color: var(--green-deep);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+  }
+
+  /* AI ADVICE CARD */
+  .ai-card {
+    background: var(--green-deep);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%);
+  }
+  .ai-card .section-title { color: var(--gold); }
+  .ai-card .section-title svg { opacity: 0.9; }
+  .ai-advice-text {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    position: relative;
+  }
+  .ai-advice-text p { margin-bottom: 10px; }
+  .ai-advice-text p:last-child { margin-bottom: 0; }
+
+  /* LOADING SKELETON */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f4f2 25%, #e2ebe6 50%, #f0f4f2 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 8px;
+    height: 16px;
+    margin-bottom: 8px;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* ALERT */
+  .alert {
+    background: #fff3cd;
+    border-left: 4px solid var(--gold);
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #7a5a00;
+    margin-bottom: 20px;
+  }
+
+  /* ONE DAY BADGE */
+  .badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--green-deep);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-flag">⛳</span>
+  <h1>Golf Trip <span>Packer</span></h1>
+  <p>Weather-smart packing advice for your perfect round</p>
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-trip" onclick="setMode('trip')">🧳 Full Trip</button>
+    <button class="mode-btn" id="btn-oneday" onclick="setMode('oneday')">📅 One Day</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="form-card">
+    <div class="field">
+      <label>Destination</label>
+      <input id="location" placeholder="e.g. Marbella, Algarve, St Andrews" />
+    </div>
+    <div class="field">
+      <label>Golf Course (optional)</label>
+      <select id="course">
+        <option value="">Select a course…</option>
+        <option>Valderrama</option>
+        <option>La Cala Resort</option>
+        <option>Finca Cortesin</option>
+        <option>Quinta do Lago</option>
+        <option>Royal Portrush</option>
+        <option>Carnoustie</option>
+        <option>Real Club de Golf El Prat</option>
+        <option>Penha Longa</option>
+      </select>
+    </div>
+    <div class="field-row" id="trip-dates">
+      <div class="field">
+        <label>Start date</label>
+        <input id="start" type="date" />
+      </div>
+      <div class="field">
+        <label>End date</label>
+        <input id="end" type="date" />
+      </div>
+    </div>
+    <div class="field" id="oneday-date" style="display:none;">
+      <label>Date of your round</label>
+      <input id="singleday" type="date" />
+    </div>
+    <button class="submit-btn" id="main-btn" onclick="checkTrip()">
+      <span>Check my golf packer</span>
+    </button>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+const OWM_KEY = "1ce0986759677cf92a04e4d1097e5d3a";
+let currentMode = 'trip';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-trip').classList.toggle('active', mode === 'trip');
+  document.getElementById('btn-oneday').classList.toggle('active', mode === 'oneday');
+  document.getElementById('trip-dates').style.display = mode === 'trip' ? 'grid' : 'none';
+  document.getElementById('oneday-date').style.display = mode === 'oneday' ? 'flex' : 'none';
+  document.getElementById('result').innerHTML = '';
+}
+
+async function getWeather(city) {
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${OWM_KEY}&units=metric`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('City not found');
+  return res.json();
+}
+
+function groupDaily(list) {
+  const days = {};
+  list.forEach(item => {
+    const date = item.dt_txt.split(' ')[0];
+    if (!days[date]) days[date] = [];
+    days[date].push(item);
+  });
+  return days;
+}
+
+function processDays(grouped) {
+  return Object.entries(grouped).map(([date, items]) => {
+    const temps = items.map(i => i.main.temp);
+    const rain = items.map(i => i.pop);
+    const desc = items[Math.floor(items.length/2)].weather[0].description;
+    return {
+      date,
+      avgTemp: temps.reduce((a,b)=>a+b,0)/temps.length,
+      minTemp: Math.min(...temps),
+      maxTemp: Math.max(...temps),
+      rainChance: Math.max(...rain)*100,
+      desc
+    };
+  });
+}
+
+function weatherIcon(temp, rain, desc) {
+  if (rain > 60) return '🌧️';
+  if (rain > 30) return '🌦️';
+  if (desc.includes('cloud')) return '⛅';
+  if (temp > 25) return '☀️';
+  if (temp > 18) return '🌤️';
+  return '🌥️';
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+}
+
+function generatePacklist(days) {
+  const n = days.length;
+  const hotDays = days.filter(d => d.avgTemp > 22).length;
+  const coldDays = days.filter(d => d.avgTemp < 16).length;
+  const mildDays = n - hotDays - coldDays;
+  const rainyDays = days.filter(d => d.rainChance > 40).length;
+  const avgRain = days.reduce((a,d)=>a+d.rainChance,0)/days.length;
+
+  return {
+    clothing: [
+      { name: 'Golf polos / shirts', qty: n + 1 },
+      { name: 'Golf shorts', qty: hotDays + Math.ceil(mildDays/2) || 0 },
+      { name: 'Golf trousers', qty: coldDays + Math.ceil(mildDays/2) || 0 },
+      { name: 'Midlayer / pullover', qty: coldDays > 0 || mildDays > 1 ? 1 : 0 },
+      { name: 'Rain jacket', qty: avgRain > 25 ? 1 : 0 },
+      { name: 'Rain trousers', qty: avgRain > 45 ? 1 : 0 },
+      { name: 'Warm base layer', qty: coldDays > 1 ? 1 : 0 },
+      { name: 'Cap / visor', qty: 1 },
+      { name: 'Beanie (cold weather)', qty: coldDays > 0 ? 1 : 0 },
+      { name: 'Socks (golf)', qty: n + 2 },
+    ].filter(i => i.qty > 0),
+    footwear: [
+      { name: 'Golf shoes (spiked)', qty: 1 },
+      { name: 'Casual shoes / trainers', qty: 1 },
+      { name: 'Flip flops / sandals', qty: hotDays > 1 ? 1 : 0 },
+    ].filter(i => i.qty > 0),
+    equipment: [
+      { name: 'Golf gloves', qty: 2 },
+      { name: 'Golf balls', qty: Math.max(12, n * 4) },
+      { name: 'Tees (mixed)', qty: 30 },
+      { name: 'Golf towel', qty: 1 },
+      { name: 'Divot tool & ball marker', qty: 1 },
+      { name: 'Rangefinder / GPS watch', qty: 1 },
+      { name: 'Umbrella', qty: avgRain > 30 ? 1 : 0 },
+    ].filter(i => i.qty > 0),
+    essentials: [
+      { name: 'Sunscreen (SPF 50)', qty: hotDays > 0 ? 1 : 0 },
+      { name: 'Sunglasses', qty: hotDays > 0 ? 1 : 0 },
+      { name: 'Lip balm with SPF', qty: 1 },
+      { name: 'Blister plasters', qty: 1 },
+      { name: 'Scorecard & pencils', qty: 1 },
+      { name: 'Snacks / energy bars', qty: n * 2 },
+    ].filter(i => i.qty > 0),
+  };
+}
+
+function renderWeatherStrip(days) {
+  return `<div class="weather-strip">
+    ${days.map(d => `
+      <div class="weather-card">
+        <div class="wdate">${formatDate(d.date)}</div>
+        <span class="wicon">${weatherIcon(d.avgTemp, d.rainChance, d.desc)}</span>
+        <div class="wtemp">${d.avgTemp.toFixed(0)}°</div>
+        <div class="wrain">💧 ${d.rainChance.toFixed(0)}%</div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderPacklist(pack, isOneDay) {
+  const cats = [
+    { key:'clothing', label:'👕 Clothing', items: pack.clothing },
+    { key:'footwear', label:'👟 Footwear', items: pack.footwear },
+    { key:'equipment', label:'🏌️ Equipment', items: pack.equipment },
+    { key:'essentials', label:'🧴 Essentials', items: pack.essentials },
+  ];
+  return `<div class="packlist-card">
+    <div class="section-title">🎒 Your Pack List${isOneDay ? '<span class="badge">One Day</span>' : ''}</div>
+    ${cats.map(cat => `
+      <div class="pack-category">
+        <div class="pack-cat-title">${cat.label}</div>
+        <div class="pack-items">
+          ${cat.items.map(item => `
+            <div class="pack-item">
+              <div class="pack-check">✓</div>
+              <span>${item.name}</span>
+              ${item.qty > 1 ? `<span class="pack-qty">×${item.qty}</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+async function getAIAdvice(location, course, days, isOneDay) {
+  const weatherSummary = days.map(d =>
+    `${d.date}: ${d.avgTemp.toFixed(1)}°C, ${d.rainChance.toFixed(0)}% rain, ${d.desc}`
+  ).join('\n');
+  const courseStr = course ? ` at ${course}` : '';
+
+  const prompt = isOneDay
+    ? `You are an experienced golf caddie and course specialist. A golfer is playing one round${courseStr} in ${location} on ${days[0]?.date}.
+
+Weather: ${weatherSummary}
+
+Give a sharp, practical 3-paragraph briefing covering:
+1. What to wear for the specific weather (be precise and opinionated)
+2. On-course strategy advice for these conditions (wind, wet ground, etc.)
+3. One key tip to make the most of the day
+
+Be confident, expert, and engaging. No filler.`
+    : `You are a seasoned golf travel expert. A golfer is taking a multi-day trip${courseStr} in ${location}.
+
+Weather forecast:
+${weatherSummary}
+
+Give expert packing advice in 3 focused paragraphs:
+1. How to dress smartly for the varying conditions across the trip
+2. What key equipment or extras to bring based on the forecast
+3. One insider tip for this destination or course
+
+Be specific, practical, and enthusiastic. No generic filler.`;
+
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+
+  if (!response.ok) throw new Error('AI unavailable');
+  const data = await response.json();
+  return data.content.map(b => b.text || '').join('');
+}
+
+async function checkTrip() {
+  const city = document.getElementById('location').value.trim();
+  const course = document.getElementById('course').value;
+  const isOneDay = currentMode === 'oneday';
+
+  if (!city) { alert('Please enter a destination.'); return; }
+
+  const btn = document.getElementById('main-btn');
+  btn.disabled = true;
+  btn.innerHTML = `<div class="spinner"></div><span>Loading…</span>`;
+
+  const result = document.getElementById('result');
+  result.innerHTML = `<div class="packlist-card">
+    <div class="skeleton" style="width:60%;height:22px;margin-bottom:20px"></div>
+    <div class="skeleton"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:90%"></div>
+  </div>`;
+
+  try {
+    const weatherData = await getWeather(city);
+    const grouped = groupDaily(weatherData.list);
+    let allDays = processDays(grouped);
+
+    let displayDays;
+    if (isOneDay) {
+      const target = document.getElementById('singleday').value;
+      displayDays = target
+        ? allDays.filter(d => d.date === target).slice(0,1)
+        : allDays.slice(0,1);
+      if (!displayDays.length) displayDays = allDays.slice(0,1);
+    } else {
+      const start = document.getElementById('start').value;
+      const end = document.getElementById('end').value;
+      displayDays = (start && end)
+        ? allDays.filter(d => d.date >= start && d.date <= end).slice(0,6)
+        : allDays.slice(0,5);
+    }
+
+    const packDays = isOneDay ? [displayDays[0]] : displayDays;
+    const pack = generatePacklist(packDays);
+
+    // Render weather + packlist immediately
+    result.innerHTML = `
+      <div class="section-title">🌤️ Weather Forecast</div>
+      ${renderWeatherStrip(displayDays)}
+      ${renderPacklist(pack, isOneDay)}
+      <div class="ai-card" id="ai-section">
+        <div class="section-title">✨ Expert Advice</div>
+        <div class="ai-advice-text">
+          <div class="skeleton"></div>
+          <div class="skeleton" style="width:90%"></div>
+          <div class="skeleton" style="width:75%"></div>
+        </div>
+      </div>
+    `;
+
+    // Load AI advice async
+    getAIAdvice(city, course, displayDays, isOneDay).then(advice => {
+      const aiSection = document.getElementById('ai-section');
+      if (aiSection) {
+        aiSection.querySelector('.ai-advice-text').innerHTML =
+          advice.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('');
+      }
+    }).catch(() => {
+      const aiSection = document.getElementById('ai-section');
+      if (aiSection) {
+        aiSection.querySelector('.ai-advice-text').innerHTML =
+          '<p>AI advice unavailable at the moment — but your packing list above is weather-ready! ⛳</p>';
+      }
+    });
+
+  } catch(err) {
+    result.innerHTML = `<div class="alert">⚠️ Couldn't load weather for "<strong>${city}</strong>". Try a nearby major city (e.g. "Malaga" instead of "Marbella").</div>`;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = `<span>Check my golf packer</span>`;
+}
+</script>
+</body>
+</html>
