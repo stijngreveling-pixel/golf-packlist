@@ -175,30 +175,62 @@
   /* RESULTS */
   #result { animation: slideUp 0.5s ease both; }
 
-  /* WEATHER STRIP */
-  .weather-strip {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    margin-bottom: 24px;
-    scrollbar-width: none;
-  }
-  .weather-strip::-webkit-scrollbar { display: none; }
-  .weather-card {
-    flex: 0 0 auto;
+  /* FORECAST TABLE */
+  .forecast-card {
     background: white;
-    border-radius: 14px;
-    padding: 16px 18px;
-    text-align: center;
-    min-width: 110px;
+    border-radius: var(--radius);
     box-shadow: var(--shadow);
-    border-top: 3px solid var(--green-bright);
+    margin-bottom: 20px;
+    overflow: hidden;
   }
-  .weather-card .wdate { font-size: 0.72rem; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-  .weather-card .wtemp { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--green-deep); line-height: 1; }
-  .weather-card .wrain { font-size: 0.78rem; color: #5a8fa0; margin-top: 5px; }
-  .weather-card .wicon { font-size: 1.4rem; margin-bottom: 4px; display: block; }
+  .forecast-header {
+    display: grid;
+    grid-template-columns: 1.4fr 0.7fr 1.1fr 1.1fr 1fr;
+    background: var(--green-deep);
+    padding: 10px 20px;
+    gap: 4px;
+  }
+  .forecast-header span {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--green-light);
+  }
+  .forecast-row {
+    display: grid;
+    grid-template-columns: 1.4fr 0.7fr 1.1fr 1.1fr 1fr;
+    padding: 13px 20px;
+    gap: 4px;
+    align-items: center;
+    border-bottom: 1px solid #f0f4f2;
+    transition: background 0.15s;
+  }
+  .forecast-row:last-child { border-bottom: none; }
+  .forecast-row:hover { background: #f7faf8; }
+  .forecast-row.rainy { border-left: 3px solid #5a8fa0; }
+  .forecast-row.hot { border-left: 3px solid var(--gold); }
+  .forecast-row.cold { border-left: 3px solid #a0b4c8; }
+  .fdate { font-size: 0.88rem; font-weight: 600; color: var(--text-dark); }
+  .fdate small { display: block; font-size: 0.72rem; font-weight: 400; color: var(--text-mid); margin-top: 1px; }
+  .ficon { font-size: 1.5rem; text-align: center; }
+  .ftemp { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--green-deep); }
+  .ftemp small { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-mid); display: block; margin-top: 1px; }
+  .frain { font-size: 0.85rem; color: #5a8fa0; font-weight: 500; }
+  .frain-bar {
+    height: 5px;
+    background: #e8f0ed;
+    border-radius: 10px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .frain-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: #5a8fa0;
+    transition: width 0.6s ease;
+  }
+  .fcond { font-size: 0.78rem; color: var(--text-mid); text-transform: capitalize; }
 
   /* SECTION TITLES */
   .section-title {
@@ -345,20 +377,7 @@
       <label>Destination</label>
       <input id="location" placeholder="e.g. Marbella, Algarve, St Andrews" />
     </div>
-    <div class="field">
-      <label>Golf Course (optional)</label>
-      <select id="course">
-        <option value="">Select a course…</option>
-        <option>Valderrama</option>
-        <option>La Cala Resort</option>
-        <option>Finca Cortesin</option>
-        <option>Quinta do Lago</option>
-        <option>Royal Portrush</option>
-        <option>Carnoustie</option>
-        <option>Real Club de Golf El Prat</option>
-        <option>Penha Longa</option>
-      </select>
-    </div>
+
     <div class="field-row" id="trip-dates">
       <div class="field">
         <label>Start date</label>
@@ -487,14 +506,25 @@ function generatePacklist(days) {
   };
 }
 
-function renderWeatherStrip(days) {
-  return `<div class="weather-strip">
+function renderForecastTable(days) {
+  const rowClass = d => d.rainChance > 50 ? 'rainy' : d.avgTemp > 23 ? 'hot' : d.avgTemp < 15 ? 'cold' : '';
+  return `<div class="forecast-card">
+    <div class="forecast-header">
+      <span>Day</span>
+      <span style="text-align:center">Sky</span>
+      <span>Temp</span>
+      <span>Rain</span>
+      <span>Conditions</span>
+    </div>
     ${days.map(d => `
-      <div class="weather-card">
-        <div class="wdate">${formatDate(d.date)}</div>
-        <span class="wicon">${weatherIcon(d.avgTemp, d.rainChance, d.desc)}</span>
-        <div class="wtemp">${d.avgTemp.toFixed(0)}°</div>
-        <div class="wrain">💧 ${d.rainChance.toFixed(0)}%</div>
+      <div class="forecast-row ${rowClass(d)}">
+        <div class="fdate">${formatDate(d.date).split(',')[0]}<small>${formatDate(d.date).split(',').slice(1).join(',').trim()}</small></div>
+        <div class="ficon">${weatherIcon(d.avgTemp, d.rainChance, d.desc)}</div>
+        <div class="ftemp">${d.avgTemp.toFixed(0)}°C<small>${d.minTemp.toFixed(0)}° – ${d.maxTemp.toFixed(0)}°</small></div>
+        <div class="frain">${d.rainChance.toFixed(0)}%
+          <div class="frain-bar"><div class="frain-fill" style="width:${Math.min(d.rainChance,100)}%"></div></div>
+        </div>
+        <div class="fcond">${d.desc}</div>
       </div>
     `).join('')}
   </div>`;
@@ -526,14 +556,13 @@ function renderPacklist(pack, isOneDay) {
   </div>`;
 }
 
-async function getAIAdvice(location, course, days, isOneDay) {
+async function getAIAdvice(location, days, isOneDay) {
   const weatherSummary = days.map(d =>
     `${d.date}: ${d.avgTemp.toFixed(1)}°C, ${d.rainChance.toFixed(0)}% rain, ${d.desc}`
   ).join('\n');
-  const courseStr = course ? ` at ${course}` : '';
 
   const prompt = isOneDay
-    ? `You are an experienced golf caddie and course specialist. A golfer is playing one round${courseStr} in ${location} on ${days[0]?.date}.
+    ? `You are an experienced golf caddie. A golfer is playing one round in ${location} on ${days[0]?.date}.
 
 Weather: ${weatherSummary}
 
@@ -543,7 +572,7 @@ Give a sharp, practical 3-paragraph briefing covering:
 3. One key tip to make the most of the day
 
 Be confident, expert, and engaging. No filler.`
-    : `You are a seasoned golf travel expert. A golfer is taking a multi-day trip${courseStr} in ${location}.
+    : `You are a seasoned golf travel expert. A golfer is taking a multi-day trip in ${location}.
 
 Weather forecast:
 ${weatherSummary}
@@ -551,7 +580,7 @@ ${weatherSummary}
 Give expert packing advice in 3 focused paragraphs:
 1. How to dress smartly for the varying conditions across the trip
 2. What key equipment or extras to bring based on the forecast
-3. One insider tip for this destination or course
+3. One insider tip for golfing in ${location}
 
 Be specific, practical, and enthusiastic. No generic filler.`;
 
@@ -572,7 +601,6 @@ Be specific, practical, and enthusiastic. No generic filler.`;
 
 async function checkTrip() {
   const city = document.getElementById('location').value.trim();
-  const course = document.getElementById('course').value;
   const isOneDay = currentMode === 'oneday';
 
   if (!city) { alert('Please enter a destination.'); return; }
@@ -613,7 +641,7 @@ async function checkTrip() {
     // Render weather + packlist immediately
     result.innerHTML = `
       <div class="section-title">🌤️ Weather Forecast</div>
-      ${renderWeatherStrip(displayDays)}
+      ${renderForecastTable(displayDays)}
       ${renderPacklist(pack, isOneDay)}
       <div class="ai-card" id="ai-section">
         <div class="section-title">✨ Expert Advice</div>
@@ -626,7 +654,7 @@ async function checkTrip() {
     `;
 
     // Load AI advice async
-    getAIAdvice(city, course, displayDays, isOneDay).then(advice => {
+    getAIAdvice(city, displayDays, isOneDay).then(advice => {
       const aiSection = document.getElementById('ai-section');
       if (aiSection) {
         aiSection.querySelector('.ai-advice-text').innerHTML =
