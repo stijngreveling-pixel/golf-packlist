@@ -410,7 +410,12 @@ function generatePacklist(days, type) {
 // ── CALENDAR ────────────────────────────────────────────────────
 const today = new Date(); today.setHours(0,0,0,0);
 const maxDate = new Date(today); maxDate.setDate(today.getDate() + 13);
-function dateStr(d) { return d.toISOString().split('T')[0]; }
+function dateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
 function parseDate(s) { return new Date(s+'T00:00:00'); }
 
 const startInput = document.getElementById('start-date');
