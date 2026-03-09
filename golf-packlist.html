@@ -306,13 +306,12 @@ function getClothingForTemp(avgTemp, rainChance, windSpeed, type) {
   let tip = null;
 
   if (avgTemp <= 12) {
-    // ~10°C bracket
     if (cold) {
       items.push('Thermal base layer');
       items.push('Golf polo');
       items.push('Warm midlayer (fleece or quarter-zip)');
       items.push(rainy ? 'Waterproof golf jacket' : 'Windproof golf jacket');
-      items.push('Golf pants');
+      items.push('Long pants');
       items.push('Optional thermal leggings under pants');
       items.push('Warm socks');
       items.push('Beanie or warm hat');
@@ -321,17 +320,16 @@ function getClothingForTemp(avgTemp, rainChance, windSpeed, type) {
       items.push('Golf polo');
       items.push('Thin midlayer');
       items.push(rainy ? 'Waterproof jacket' : 'Light wind jacket');
-      items.push('Golf pants');
+      items.push('Long pants');
       items.push('Cap');
       if (rainy) items.push('Waterproof gloves');
     }
   } else if (avgTemp <= 17) {
-    // ~15°C bracket
     if (cold) {
       items.push('Golf polo');
       items.push('Midlayer (quarter-zip or light sweater)');
       items.push(rainy ? 'Waterproof jacket' : 'Wind jacket or vest');
-      items.push('Golf pants');
+      items.push('Long pants');
       items.push('Cap');
       if (windy) items.push('Extra glove');
     } else {
@@ -339,35 +337,33 @@ function getClothingForTemp(avgTemp, rainChance, windSpeed, type) {
       items.push('Optional thin midlayer for the first few holes');
       if (rainy) items.push('Waterproof jacket');
       else if (windy) items.push('Light wind jacket');
-      items.push('Golf pants or lightweight pants');
+      items.push('Long pants');
       items.push('Cap');
     }
     tip = '💡 Many golfers wear a layer they can remove after a few holes.';
   } else if (avgTemp <= 24) {
-    // ~20°C bracket — shorts from 15°C+
     if (cold) {
       items.push('Golf polo');
       items.push('Optional light sweater in the morning');
-      items.push('Golf shorts or lightweight pants');
+      items.push('Shorts');
       items.push('Cap');
     } else {
       items.push('Golf polo');
-      items.push('Golf shorts');
+      items.push('Shorts');
       items.push('Cap or visor');
       items.push('Sunglasses');
     }
     tip = '☀️ Ideal golf weather for most players.';
   } else {
-    // ~30°C+ bracket
     if (cold) {
       items.push('Lightweight breathable polo');
-      items.push('Golf shorts');
+      items.push('Shorts');
       items.push('Cap or visor');
       items.push('Sunglasses');
       items.push('Sunscreen');
     } else {
       items.push('Lightweight performance polo');
-      items.push('Golf shorts');
+      items.push('Shorts');
       items.push('Cap or visor');
       items.push('Sunglasses');
       items.push('Sunscreen');
