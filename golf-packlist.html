@@ -45,6 +45,26 @@
   .field input { padding: 13px 16px; border: 1.5px solid #e2e8e4; border-radius: 10px; font-size: 1rem; font-family: 'DM Sans', sans-serif; color: var(--text-dark); background: #fafcfb; outline: none; transition: border-color 0.2s; width: 100%; }
   .field input:focus { border-color: var(--green-bright); background: white; }
 
+  /* AUTOCOMPLETE */
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-dropdown {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: white; border: 1.5px solid #e2e8e4; border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(26,58,42,0.13); z-index: 100;
+    overflow: hidden; display: none;
+  }
+  .autocomplete-dropdown.open { display: block; }
+  .ac-item {
+    padding: 11px 16px; cursor: pointer; display: flex; align-items: center;
+    gap: 10px; transition: background 0.12s; border-bottom: 1px solid #f4f7f5;
+  }
+  .ac-item:last-child { border-bottom: none; }
+  .ac-item:hover, .ac-item.focused { background: #f0faf5; }
+  .ac-flag { font-size: 1.1rem; flex-shrink: 0; }
+  .ac-name { font-size: 0.92rem; font-weight: 600; color: var(--text-dark); }
+  .ac-detail { font-size: 0.78rem; color: var(--text-mid); margin-top: 1px; }
+  .ac-loading { padding: 12px 16px; font-size: 0.85rem; color: var(--text-mid); }
+
   /* GOLFER TYPE TOGGLE */
   .gt-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .gt-btn { background: #f7faf8; border: 2px solid #e2e8e4; border-radius: 12px; padding: 16px; cursor: pointer; text-align: left; transition: all 0.18s; display: flex; flex-direction: column; gap: 4px; font-family: 'DM Sans', sans-serif; }
@@ -205,8 +225,9 @@
       <div class="step">
         <div class="step-num">Step 2</div>
         <div class="step-label">Where are you playing?</div>
-        <div class="field">
-          <input id="location" placeholder="e.g. Marbella, Algarve, St Andrews" />
+        <div class="field autocomplete-wrap">
+          <input id="location" placeholder="e.g. Vilamoura, Marbella, St Andrews" autocomplete="off" />
+          <div class="autocomplete-dropdown" id="ac-dropdown"></div>
         </div>
       </div>
 
@@ -491,7 +512,92 @@ endInput.addEventListener('change',   () => { refreshCal(); updateSummary(); });
 buildCalStrip(); updateSummary();
 
 // ── OPEN-METEO ──────────────────────────────────────────────────
+// ── AUTOCOMPLETE ────────────────────────────────────────────────
+let selectedLocation = null; // { lat, lon, name, country, admin }
+let acDebounce = null;
+let acFocusIdx = -1;
+
+const locationInput = document.getElementById('location');
+const acDropdown    = document.getElementById('ac-dropdown');
+
+// Country code → flag emoji
+function countryFlag(code) {
+  if (!code) return '📍';
+  return code.toUpperCase().replace(/./g, c =>
+    String.fromCodePoint(c.charCodeAt(0) + 127397));
+}
+
+async function fetchSuggestions(query) {
+  const res  = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`);
+  const data = await res.json();
+  return data.results || [];
+}
+
+function showDropdown(results) {
+  acFocusIdx = -1;
+  if (!results.length) { acDropdown.classList.remove('open'); return; }
+  acDropdown.innerHTML = results.map((r, i) => {
+    const detail = [r.admin1, r.country].filter(Boolean).join(', ');
+    return `<div class="ac-item" data-idx="${i}" onmousedown="pickLocation(event, ${i})">
+      <span class="ac-flag">${countryFlag(r.country_code)}</span>
+      <div>
+        <div class="ac-name">${r.name}</div>
+        <div class="ac-detail">${detail}</div>
+      </div>
+    </div>`;
+  }).join('');
+  acDropdown.__results = results;
+  acDropdown.classList.add('open');
+}
+
+function pickLocation(e, idx) {
+  e.preventDefault();
+  const r = acDropdown.__results[idx];
+  selectedLocation = { lat: r.latitude, lon: r.longitude, name: r.name, country: r.country };
+  const detail = [r.admin1, r.country].filter(Boolean).join(', ');
+  locationInput.value = `${r.name}, ${detail}`;
+  acDropdown.classList.remove('open');
+}
+
+locationInput.addEventListener('input', () => {
+  selectedLocation = null;
+  const q = locationInput.value.trim();
+  if (q.length < 2) { acDropdown.classList.remove('open'); return; }
+  clearTimeout(acDebounce);
+  acDropdown.innerHTML = '<div class="ac-loading">Searching…</div>';
+  acDropdown.classList.add('open');
+  acDebounce = setTimeout(async () => {
+    const results = await fetchSuggestions(q);
+    showDropdown(results);
+  }, 280);
+});
+
+locationInput.addEventListener('keydown', e => {
+  const items = acDropdown.querySelectorAll('.ac-item');
+  if (e.key === 'ArrowDown') {
+    acFocusIdx = Math.min(acFocusIdx + 1, items.length - 1);
+    items.forEach((el,i) => el.classList.toggle('focused', i === acFocusIdx));
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp') {
+    acFocusIdx = Math.max(acFocusIdx - 1, 0);
+    items.forEach((el,i) => el.classList.toggle('focused', i === acFocusIdx));
+    e.preventDefault();
+  } else if (e.key === 'Enter' && acFocusIdx >= 0) {
+    pickLocation({ preventDefault: ()=>{} }, acFocusIdx);
+    e.preventDefault();
+  } else if (e.key === 'Escape') {
+    acDropdown.classList.remove('open');
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.autocomplete-wrap')) acDropdown.classList.remove('open');
+});
+
 async function geocode(city) {
+  // If user picked from dropdown, use that directly
+  if (selectedLocation) return selectedLocation;
+  // Fallback: search by text
   const res  = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
   const data = await res.json();
   if (!data.results?.length) throw new Error('City not found');
@@ -676,7 +782,7 @@ function tickItem(id, catKey, total) {
 
 // ── MAIN ────────────────────────────────────────────────────────
 async function checkTrip() {
-  const city  = document.getElementById('location').value.trim();
+  const city  = selectedLocation ? selectedLocation.name : document.getElementById('location').value.trim();
   const start = document.getElementById('start-date').value;
   const end   = document.getElementById('end-date').value;
 
