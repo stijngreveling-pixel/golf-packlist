@@ -21,6 +21,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; }
 
+  /* HERO */
   .hero { background: var(--green-deep); padding: 40px 24px 48px; text-align: center; position: relative; overflow: hidden; }
   .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 0%, rgba(82,183,136,0.18) 0%, transparent 65%), radial-gradient(ellipse at 20% 100%, rgba(201,168,76,0.12) 0%, transparent 50%); }
   .hero-flag { font-size: 48px; margin-bottom: 10px; position: relative; display: block; animation: bounce 2s ease-in-out infinite; }
@@ -29,30 +30,87 @@
   .hero h1 span { color: var(--gold); }
   .hero p { color: var(--green-light); font-size: 0.95rem; margin-top: 8px; position: relative; font-weight: 300; }
 
+  /* CONTAINER */
   .container { max-width: 720px; margin: 0 auto; padding: 28px 20px 60px; }
 
+  /* FORM */
   .form-card { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin-bottom: 28px; animation: slideUp 0.4s ease both; }
   @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-  .field label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); }
-  .field input { padding: 13px 16px; border: 1.5px solid #e2e8e4; border-radius: 10px; font-size: 1rem; font-family: 'DM Sans', sans-serif; color: var(--text-dark); background: #fafcfb; outline: none; transition: border-color 0.2s; }
-  .field input:focus { border-color: var(--green-bright); background: white; }
-  .submit-btn { width: 100%; padding: 15px; background: var(--green-deep); color: white; border: none; border-radius: 12px; font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; }
+
+  .form-steps { display: flex; flex-direction: column; gap: 0; }
+
+  /* STEP */
+  .step { padding: 20px 0; border-bottom: 1px solid #f0f4f2; }
+  .step:last-child { border-bottom: none; padding-bottom: 0; }
+  .step:first-child { padding-top: 0; }
+  .step-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-bright); margin-bottom: 4px; }
+  .step-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 10px; }
+
+  .field input, .field select {
+    padding: 13px 16px; border: 1.5px solid #e2e8e4; border-radius: 10px;
+    font-size: 1rem; font-family: 'DM Sans', sans-serif; color: var(--text-dark);
+    background: #fafcfb; outline: none; transition: border-color 0.2s; width: 100%;
+  }
+  .field input:focus, .field select:focus { border-color: var(--green-bright); background: white; }
+
+  /* DATE RANGE PICKER */
+  .date-range-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .date-field { display: flex; flex-direction: column; gap: 5px; }
+  .date-field label { font-size: 0.7rem; font-weight: 600; color: var(--text-mid); letter-spacing: 0.05em; text-transform: uppercase; }
+  .date-field input[type="date"] {
+    padding: 11px 14px; border: 1.5px solid #e2e8e4; border-radius: 10px;
+    font-size: 0.95rem; font-family: 'DM Sans', sans-serif; color: var(--text-dark);
+    background: #fafcfb; outline: none; transition: border-color 0.2s; width: 100%;
+  }
+  .date-field input[type="date"]:focus { border-color: var(--green-bright); background: white; }
+
+  .date-hint { font-size: 0.78rem; color: var(--text-mid); margin-top: 8px; }
+  .date-hint span { color: var(--green-mid); font-weight: 600; }
+
+  /* CALENDAR MINI STRIP */
+  .cal-strip { margin-top: 12px; overflow-x: auto; scrollbar-width: none; }
+  .cal-strip::-webkit-scrollbar { display: none; }
+  .cal-days { display: flex; gap: 6px; padding-bottom: 4px; min-width: max-content; }
+  .cal-day {
+    width: 48px; padding: 8px 4px; border-radius: 10px; text-align: center;
+    cursor: pointer; border: 1.5px solid #e8eeeb; background: white;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .cal-day:hover { border-color: var(--green-bright); background: #f0faf5; }
+  .cal-day.selected { background: var(--green-deep); border-color: var(--green-deep); color: white; }
+  .cal-day.in-range { background: var(--green-light); border-color: var(--green-light); }
+  .cal-day.range-start { background: var(--green-deep); border-color: var(--green-deep); color: white; border-radius: 10px 10px 10px 10px; }
+  .cal-day.range-end { background: var(--green-deep); border-color: var(--green-deep); color: white; }
+  .cal-day.today-marker { border-color: var(--gold); }
+  .cal-day-name { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.65; margin-bottom: 3px; }
+  .cal-day-num { font-size: 1rem; font-weight: 700; line-height: 1; }
+  .cal-day-month { font-size: 0.6rem; opacity: 0.6; margin-top: 2px; }
+  .cal-day.selected .cal-day-name,
+  .cal-day.range-start .cal-day-name,
+  .cal-day.range-end .cal-day-name { opacity: 0.8; }
+  .cal-day.in-range .cal-day-name { opacity: 0.7; }
+
+  .trip-summary { margin-top: 12px; padding: 10px 14px; background: #f0faf5; border-radius: 8px; font-size: 0.85rem; color: var(--green-mid); font-weight: 500; display: none; }
+  .trip-summary.visible { display: block; }
+
+  /* SUBMIT */
+  .submit-btn { width: 100%; padding: 15px; background: var(--green-deep); color: white; border: none; border-radius: 12px; font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; margin-top: 20px; }
   .submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,58,42,0.2); }
   .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to{transform:rotate(360deg)} }
 
+  /* SECTION TITLE */
   .section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--green-deep); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 
   /* TODAY CARD */
   .today-card { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 14px; border-left: 4px solid var(--green-bright); }
   .today-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
   .today-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-bright); margin-bottom: 4px; }
-  .today-date { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+  .today-date { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--text-dark); }
   .today-desc { font-size: 0.85rem; color: var(--text-mid); margin-top: 2px; text-transform: capitalize; }
   .today-temp-block { text-align: right; }
-  .today-temp { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--green-deep); line-height: 1; }
+  .today-temp { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 900; color: var(--green-deep); line-height: 1; }
   .today-feels { font-size: 0.78rem; color: var(--text-mid); margin-top: 3px; }
   .today-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
   .today-meta-item { font-size: 0.82rem; color: var(--text-mid); }
@@ -63,7 +121,7 @@
   .slot-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 2px; }
   .slot-time { font-size: 0.7rem; color: #8aab97; margin-bottom: 8px; }
   .slot-icon { font-size: 1.3rem; margin-bottom: 4px; display: block; }
-  .slot-temp { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; color: var(--green-deep); }
+  .slot-temp { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--green-deep); }
   .slot-feels { font-size: 0.72rem; color: var(--text-mid); margin-bottom: 4px; }
   .slot-meta { font-size: 0.72rem; color: var(--text-mid); margin-bottom: 6px; }
   .slot-wear { margin-top: 8px; border-top: 1px solid #e8f0ec; padding-top: 8px; }
@@ -72,7 +130,8 @@
 
   /* WEEK GRID */
   .week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 28px; }
-  .week-card { background: white; border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border-top: 3px solid var(--green-bright); }
+  .week-card { background: white; border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border-top: 3px solid var(--green-bright); cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .week-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,58,42,0.14); }
   .week-card.rainy { border-top-color: #5a8fa0; }
   .week-card.cold  { border-top-color: #a0b4c8; }
   .week-card.hot   { border-top-color: var(--gold); }
@@ -104,6 +163,7 @@
   .ai-advice-text p { margin-bottom: 10px; }
   .ai-advice-text p:last-child { margin-bottom: 0; }
 
+  /* SKELETON */
   .skeleton { background: linear-gradient(90deg,#f0f4f2 25%,#e2ebe6 50%,#f0f4f2 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; height: 14px; margin-bottom: 8px; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
@@ -113,6 +173,7 @@
   @media (max-width: 520px) {
     .slots { grid-template-columns: 1fr; }
     .week-grid { grid-template-columns: repeat(2, 1fr); }
+    .date-range-row { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -126,103 +187,226 @@
 
 <div class="container">
   <div class="form-card">
-    <div class="field">
-      <label>Destination</label>
-      <input id="location" placeholder="e.g. Marbella, Algarve, St Andrews" />
+    <div class="form-steps">
+
+      <div class="step">
+        <div class="step-num">Step 1</div>
+        <div class="step-label">Where are you playing?</div>
+        <div class="field">
+          <input id="location" placeholder="e.g. Marbella, Algarve, St Andrews" />
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">Step 2</div>
+        <div class="step-label">When is your trip? <span style="font-weight:400;color:#8aab97;font-size:0.7rem;text-transform:none;letter-spacing:0">(up to 14 days ahead)</span></div>
+        <div class="date-range-row">
+          <div class="date-field">
+            <label>From</label>
+            <input type="date" id="start-date" />
+          </div>
+          <div class="date-field">
+            <label>To</label>
+            <input type="date" id="end-date" />
+          </div>
+        </div>
+        <div class="cal-strip">
+          <div class="cal-days" id="cal-days"></div>
+        </div>
+        <div class="trip-summary" id="trip-summary"></div>
+      </div>
+
     </div>
     <button class="submit-btn" id="main-btn" onclick="checkTrip()">
       <span>Check my golf packer</span>
     </button>
   </div>
+
   <div id="result"></div>
 </div>
 
 <script>
-const OWM_KEY = "1ce0986759677cf92a04e4d1097e5d3a";
+// ── CALENDAR STRIP ──────────────────────────────────────────────
+const today = new Date(); today.setHours(0,0,0,0);
+const maxDate = new Date(today); maxDate.setDate(today.getDate() + 13);
 
-async function getWeather(city) {
-  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${OWM_KEY}&units=metric`;
+function dateStr(d) {
+  return d.toISOString().split('T')[0];
+}
+function parseDate(s) {
+  const d = new Date(s+'T00:00:00'); return d;
+}
+
+// Set min/max on inputs
+const startInput = document.getElementById('start-date');
+const endInput   = document.getElementById('end-date');
+startInput.min = dateStr(today);
+startInput.max = dateStr(maxDate);
+endInput.min   = dateStr(today);
+endInput.max   = dateStr(maxDate);
+
+// Build calendar strip
+function buildCalStrip() {
+  const container = document.getElementById('cal-days');
+  container.innerHTML = '';
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    const ds = dateStr(d);
+    const el = document.createElement('div');
+    el.className = 'cal-day' + (i === 0 ? ' today-marker' : '');
+    el.dataset.date = ds;
+    el.innerHTML = `
+      <div class="cal-day-name">${d.toLocaleDateString('en-GB',{weekday:'short'})}</div>
+      <div class="cal-day-num">${d.getDate()}</div>
+      <div class="cal-day-month">${d.toLocaleDateString('en-GB',{month:'short'})}</div>`;
+    el.onclick = () => handleCalClick(ds);
+    container.appendChild(el);
+  }
+  refreshCal();
+}
+
+let clickCount = 0;
+function handleCalClick(ds) {
+  const s = startInput.value;
+  const e = endInput.value;
+  if (!s || (s && e)) {
+    // start fresh
+    startInput.value = ds;
+    endInput.value = '';
+    clickCount = 1;
+  } else if (s && !e) {
+    if (ds < s) { startInput.value = ds; endInput.value = ''; clickCount = 1; }
+    else { endInput.value = ds; clickCount = 0; updateSummary(); }
+  }
+  refreshCal();
+  updateSummary();
+}
+
+function refreshCal() {
+  const s = startInput.value;
+  const e = endInput.value;
+  document.querySelectorAll('.cal-day').forEach(el => {
+    const ds = el.dataset.date;
+    el.classList.remove('selected','in-range','range-start','range-end');
+    if (s && !e && ds === s) el.classList.add('selected');
+    else if (s && e) {
+      if (ds === s) el.classList.add('range-start');
+      else if (ds === e) el.classList.add('range-end');
+      else if (ds > s && ds < e) el.classList.add('in-range');
+    }
+  });
+}
+
+function updateSummary() {
+  const s = startInput.value;
+  const e = endInput.value;
+  const el = document.getElementById('trip-summary');
+  if (s && e) {
+    const days = Math.round((parseDate(e)-parseDate(s))/(1000*60*60*24))+1;
+    el.textContent = `⛳ ${days} day${days>1?'s':''} · ${new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})} – ${new Date(e+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
+    el.classList.add('visible');
+  } else if (s) {
+    el.textContent = `📅 Select your end date`;
+    el.classList.add('visible');
+  } else {
+    el.classList.remove('visible');
+  }
+}
+
+startInput.addEventListener('change', () => { refreshCal(); updateSummary(); });
+endInput.addEventListener('change',   () => { refreshCal(); updateSummary(); });
+buildCalStrip();
+
+// ── OPEN-METEO API ──────────────────────────────────────────────
+async function geocode(city) {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error('Not found');
+  const data = await res.json();
+  if (!data.results?.length) throw new Error('City not found');
+  return { lat: data.results[0].latitude, lon: data.results[0].longitude, name: data.results[0].name };
+}
+
+async function getWeather(lat, lon) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+    + `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,weathercode`
+    + `&hourly=temperature_2m,apparent_temperature,precipitation_probability,windspeed_10m,weathercode`
+    + `&timezone=auto&forecast_days=14`;
+  const res = await fetch(url);
   return res.json();
 }
 
-function getSlotItems(items, fromH, toH) {
-  return items.filter(i => {
-    const h = parseInt(i.dt_txt.split(' ')[1].split(':')[0]);
-    return h >= fromH && h < toH;
-  });
+// WMO weather codes → description + icon
+function wmoDesc(code) {
+  if (code === 0) return { desc: 'Clear sky', icon: '☀️' };
+  if (code <= 2)  return { desc: 'Partly cloudy', icon: '⛅' };
+  if (code === 3) return { desc: 'Overcast', icon: '☁️' };
+  if (code <= 49) return { desc: 'Foggy / misty', icon: '🌫️' };
+  if (code <= 55) return { desc: 'Drizzle', icon: '🌦️' };
+  if (code <= 67) return { desc: 'Rain', icon: '🌧️' };
+  if (code <= 77) return { desc: 'Snow', icon: '❄️' };
+  if (code <= 82) return { desc: 'Rain showers', icon: '🌦️' };
+  if (code <= 86) return { desc: 'Snow showers', icon: '🌨️' };
+  if (code >= 95) return { desc: 'Thunderstorm', icon: '⛈️' };
+  return { desc: 'Mixed', icon: '🌥️' };
 }
 
-function calcSlot(items) {
-  if (!items.length) return null;
-  const mid = items[Math.floor(items.length / 2)];
-  return {
-    temp:  items.reduce((a,b) => a + b.main.temp, 0) / items.length,
-    feels: items.reduce((a,b) => a + b.main.feels_like, 0) / items.length,
-    rain:  Math.max(...items.map(i => i.pop)) * 100,
-    wind:  items.reduce((a,b) => a + b.wind.speed, 0) / items.length,
-    desc:  mid.weather[0].description,
-  };
-}
+function processWeatherData(raw, startDate, endDate) {
+  const daily = raw.daily;
+  const hourly = raw.hourly;
+  const result = [];
 
-function groupDaily(list) {
-  const days = {};
-  list.forEach(item => {
-    const date = item.dt_txt.split(' ')[0];
-    if (!days[date]) days[date] = [];
-    days[date].push(item);
-  });
-  return days;
-}
+  daily.time.forEach((date, i) => {
+    if (date < startDate || date > endDate) return;
+    const w = wmoDesc(daily.weathercode[i]);
 
-function processDays(grouped) {
-  return Object.entries(grouped).map(([date, items]) => {
-    const temps = items.map(i => i.main.temp);
-    const feels = items.map(i => i.main.feels_like);
-    const winds = items.map(i => i.wind.speed);
-    const mid   = items[Math.floor(items.length / 2)];
-    return {
-      date,
-      avgTemp:    temps.reduce((a,b)=>a+b,0)/temps.length,
-      feelsLike:  feels.reduce((a,b)=>a+b,0)/feels.length,
-      minTemp:    Math.min(...temps),
-      maxTemp:    Math.max(...temps),
-      rainChance: Math.max(...items.map(i=>i.pop))*100,
-      windSpeed:  winds.reduce((a,b)=>a+b,0)/winds.length,
-      desc:       mid.weather[0].description,
-      morning:    calcSlot(getSlotItems(items, 6, 12)),
-      afternoon:  calcSlot(getSlotItems(items, 12, 18)),
-      evening:    calcSlot(getSlotItems(items, 18, 24).concat(getSlotItems(items, 0, 6))),
+    // Find hourly indices for this date
+    const hIdxs = hourly.time.map((t,hi) => t.startsWith(date) ? hi : -1).filter(x=>x>=0);
+    const getSlot = (fromH, toH) => hIdxs.filter(hi => {
+      const h = parseInt(hourly.time[hi].split('T')[1].split(':')[0]);
+      return h >= fromH && h < toH;
+    });
+
+    const slotAvg = (idxs, key) => idxs.length ? idxs.reduce((a,hi)=>a+hourly[key][hi],0)/idxs.length : null;
+    const slotMax = (idxs, key) => idxs.length ? Math.max(...idxs.map(hi=>hourly[key][hi])) : null;
+
+    const mkSlot = (idxs) => {
+      if (!idxs.length) return null;
+      const midIdx = idxs[Math.floor(idxs.length/2)];
+      return {
+        temp:  slotAvg(idxs,'temperature_2m'),
+        feels: slotAvg(idxs,'apparent_temperature'),
+        rain:  slotMax(idxs,'precipitation_probability'),
+        wind:  slotAvg(idxs,'windspeed_10m'),
+        code:  hourly.weathercode[midIdx],
+      };
     };
+
+    const avgTemp = (daily.temperature_2m_max[i] + daily.temperature_2m_min[i]) / 2;
+
+    result.push({
+      date,
+      maxTemp:    daily.temperature_2m_max[i],
+      minTemp:    daily.temperature_2m_min[i],
+      avgTemp,
+      rainChance: daily.precipitation_probability_max[i],
+      windSpeed:  daily.windspeed_10m_max[i],
+      desc:       w.desc,
+      icon:       w.icon,
+      morning:    mkSlot(getSlot(6,12)),
+      afternoon:  mkSlot(getSlot(12,18)),
+      evening:    mkSlot(getSlot(18,23)),
+    });
   });
+  return result;
 }
 
-function weatherIcon(temp, rain, desc) {
-  if (rain > 60) return '🌧️';
-  if (rain > 30) return '🌦️';
-  if (desc.includes('thunder')) return '⛈️';
-  if (desc.includes('snow')) return '❄️';
-  if (desc.includes('mist') || desc.includes('fog')) return '🌫️';
-  if (desc.includes('cloud')) return '⛅';
-  if (temp > 25) return '☀️';
-  if (temp > 18) return '🌤️';
-  return '🌥️';
-}
-
-function formatDate(str) {
-  return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-}
-function formatShort(str) {
-  return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
-}
-
+// ── OUTFIT LOGIC ────────────────────────────────────────────────
 function golfOutfit(temp, rain, wind) {
   if (temp === null) return [];
   const items = [];
   const hot   = temp > 18;
   const cold  = temp <= 12;
-  const windy = wind > 5;
+  const windy = wind > 20;
   const rainy = rain > 40;
   items.push(hot ? '🩳 Golf shorts' : '👖 Golf trousers');
   items.push('👕 Golf polo');
@@ -235,18 +419,75 @@ function golfOutfit(temp, rain, wind) {
   return items;
 }
 
+// ── PACK LIST ───────────────────────────────────────────────────
+function generatePacklist(days) {
+  const n        = days.length;
+  const hotDays  = days.filter(d => d.avgTemp > 18).length;
+  const coldDays = days.filter(d => d.avgTemp <= 12).length;
+  const mildDays = n - hotDays - coldDays;
+  const anyRain  = days.some(d => d.rainChance > 40);
+  const anyCold  = coldDays > 0;
+  const anyHot   = hotDays > 0;
+  const anyWind  = days.some(d => d.windSpeed > 20);
+  return {
+    clothing: [
+      { name: 'Golf polos / shirts',       qty: n },
+      hotDays > 0 ? { name: 'Golf shorts', qty: hotDays } : null,
+      (coldDays+mildDays)>0 ? { name: 'Golf trousers', qty: coldDays+mildDays } : null,
+      (anyCold||mildDays>0) ? { name: 'Midlayer / pullover', qty: 1 } : null,
+      anyCold ? { name: 'Warm base layer', qty: 1 } : null,
+      anyRain  ? { name: 'Rain jacket',    qty: 1 } : null,
+      (anyWind&&!anyRain) ? { name: 'Wind jacket', qty: 1 } : null,
+      { name: 'Cap / visor',               qty: 1 },
+      anyCold  ? { name: 'Beanie',         qty: 1 } : null,
+      { name: 'Golf socks',                qty: n + 1 },
+    ].filter(Boolean),
+    footwear: [
+      { name: 'Golf shoes',                qty: 1 },
+      { name: 'Casual shoes / trainers',   qty: 1 },
+      anyHot ? { name: 'Flip flops',       qty: 1 } : null,
+    ].filter(Boolean),
+    equipment: [
+      { name: 'Golf gloves',               qty: anyRain ? 3 : 2 },
+      { name: 'Golf balls',                qty: n * 4 },
+      { name: 'Tees (mixed)',              qty: 30 },
+      { name: 'Golf towel',                qty: 1 },
+      { name: 'Divot tool & ball marker',  qty: 1 },
+      { name: 'Rangefinder / GPS watch',   qty: 1 },
+      anyRain ? { name: 'Umbrella',        qty: 1 } : null,
+    ].filter(Boolean),
+    essentials: [
+      anyHot  ? { name: 'Sunscreen SPF 50', qty: 1 } : null,
+      anyHot  ? { name: 'Sunglasses',       qty: 1 } : null,
+      { name: 'Lip balm with SPF',          qty: 1 },
+      { name: 'Blister plasters',           qty: 1 },
+      { name: 'Snacks / energy bars',       qty: n * 2 },
+      { name: 'Water bottle',               qty: 1 },
+    ].filter(Boolean),
+  };
+}
+
+// ── RENDER ──────────────────────────────────────────────────────
+function formatDate(str) {
+  return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+}
+function formatShort(str) {
+  return new Date(str+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+}
+
 function renderSlot(label, time, slot) {
   if (!slot) return `<div class="slot"><div class="slot-label">${label}</div><div class="slot-time">${time}</div><div style="font-size:0.8rem;color:#ccc;margin-top:8px">No data</div></div>`;
+  const w = wmoDesc(slot.code);
   const outfit = golfOutfit(slot.temp, slot.rain, slot.wind);
   return `<div class="slot">
     <div class="slot-label">${label}</div>
     <div class="slot-time">${time}</div>
-    <span class="slot-icon">${weatherIcon(slot.temp, slot.rain, slot.desc)}</span>
+    <span class="slot-icon">${w.icon}</span>
     <div class="slot-temp">${slot.temp.toFixed(0)}°</div>
     <div class="slot-feels">Feels ${slot.feels.toFixed(0)}°</div>
-    <div class="slot-meta">💧 ${slot.rain.toFixed(0)}% · 💨 ${(slot.wind*3.6).toFixed(0)} km/h</div>
+    <div class="slot-meta">💧 ${slot.rain.toFixed(0)}% · 💨 ${slot.wind.toFixed(0)} km/h</div>
     <div class="slot-wear">
-      <div class="slot-wear-title">Wear today</div>
+      <div class="slot-wear-title">Wear</div>
       ${outfit.map(i=>`<div class="slot-item">${i}</div>`).join('')}
     </div>
   </div>`;
@@ -259,65 +500,43 @@ function weekCardClass(d) {
   return '';
 }
 
-function renderWeekCard(d) {
-  return `<div class="week-card ${weekCardClass(d)}">
-    <div class="wc-day">${formatShort(d.date)}</div>
-    <span class="wc-icon">${weatherIcon(d.avgTemp, d.rainChance, d.desc)}</span>
-    <div class="wc-temp">${d.avgTemp.toFixed(0)}°C</div>
-    <div class="wc-range">${d.minTemp.toFixed(0)}° – ${d.maxTemp.toFixed(0)}°</div>
-    <div class="wc-rain">💧 ${d.rainChance.toFixed(0)}%
-      <div class="rain-bar"><div class="rain-fill" style="width:${Math.min(d.rainChance,100)}%"></div></div>
+function renderDayCard(d, label) {
+  return `<div class="today-card">
+    <div class="today-top">
+      <div>
+        <div class="today-label">${label}</div>
+        <div class="today-date">${formatDate(d.date)}</div>
+        <div class="today-desc">${d.icon} ${d.desc}</div>
+      </div>
+      <div class="today-temp-block">
+        <div class="today-temp">${d.avgTemp.toFixed(0)}°C</div>
+        <div class="today-feels">${d.minTemp.toFixed(0)}° – ${d.maxTemp.toFixed(0)}°</div>
+      </div>
     </div>
-    <div class="wc-wind">💨 ${(d.windSpeed*3.6).toFixed(0)} km/h</div>
-    <div class="wc-desc">${d.desc}</div>
+    <div class="today-meta">
+      <div class="today-meta-item">💧 ${d.rainChance}% rain</div>
+      <div class="today-meta-item">💨 ${d.windSpeed.toFixed(0)} km/h</div>
+    </div>
+    <div class="slots">
+      ${renderSlot('Morning','06:00–12:00', d.morning)}
+      ${renderSlot('Afternoon','12:00–18:00', d.afternoon)}
+      ${renderSlot('Evening','18:00–22:00', d.evening)}
+    </div>
   </div>`;
 }
 
-function generatePacklist(days) {
-  const n        = days.length;
-  const hotDays  = days.filter(d => d.avgTemp > 18).length;
-  const coldDays = days.filter(d => d.avgTemp <= 12).length;
-  const mildDays = n - hotDays - coldDays;
-  const anyRain  = days.some(d => d.rainChance > 40);
-  const anyCold  = coldDays > 0;
-  const anyHot   = hotDays > 0;
-  const anyWind  = days.some(d => d.windSpeed > 5);
-  return {
-    clothing: [
-      { name: 'Golf polos / shirts',      qty: n },
-      hotDays > 0 ? { name: 'Golf shorts', qty: hotDays } : null,
-      (coldDays+mildDays) > 0 ? { name: 'Golf trousers', qty: coldDays+mildDays } : null,
-      (anyCold||mildDays>0) ? { name: 'Midlayer / pullover', qty: 1 } : null,
-      anyCold ? { name: 'Warm base layer', qty: 1 } : null,
-      anyRain  ? { name: 'Rain jacket',   qty: 1 } : null,
-      (anyWind&&!anyRain) ? { name: 'Wind jacket', qty: 1 } : null,
-      { name: 'Cap / visor',              qty: 1 },
-      anyCold  ? { name: 'Beanie',        qty: 1 } : null,
-      { name: 'Golf socks',               qty: n + 1 },
-    ].filter(Boolean),
-    footwear: [
-      { name: 'Golf shoes',               qty: 1 },
-      { name: 'Casual shoes / trainers',  qty: 1 },
-      anyHot ? { name: 'Flip flops',      qty: 1 } : null,
-    ].filter(Boolean),
-    equipment: [
-      { name: 'Golf gloves',              qty: anyRain ? 3 : 2 },
-      { name: 'Golf balls',               qty: n * 4 },
-      { name: 'Tees (mixed)',             qty: 30 },
-      { name: 'Golf towel',               qty: 1 },
-      { name: 'Divot tool & ball marker', qty: 1 },
-      { name: 'Rangefinder / GPS watch',  qty: 1 },
-      anyRain ? { name: 'Umbrella',       qty: 1 } : null,
-    ].filter(Boolean),
-    essentials: [
-      anyHot  ? { name: 'Sunscreen SPF 50', qty: 1 } : null,
-      anyHot  ? { name: 'Sunglasses',       qty: 1 } : null,
-      { name: 'Lip balm with SPF',          qty: 1 },
-      { name: 'Blister plasters',           qty: 1 },
-      { name: 'Snacks / energy bars',       qty: n * 2 },
-      { name: 'Water bottle',               qty: 1 },
-    ].filter(Boolean),
-  };
+function renderWeekCard(d) {
+  return `<div class="week-card ${weekCardClass(d)}">
+    <div class="wc-day">${formatShort(d.date)}</div>
+    <span class="wc-icon">${d.icon}</span>
+    <div class="wc-temp">${d.avgTemp.toFixed(0)}°C</div>
+    <div class="wc-range">${d.minTemp.toFixed(0)}° – ${d.maxTemp.toFixed(0)}°</div>
+    <div class="wc-rain">💧 ${d.rainChance}%
+      <div class="rain-bar"><div class="rain-fill" style="width:${Math.min(d.rainChance,100)}%"></div></div>
+    </div>
+    <div class="wc-wind">💨 ${d.windSpeed.toFixed(0)} km/h</div>
+    <div class="wc-desc">${d.desc}</div>
+  </div>`;
 }
 
 function renderPacklist(pack) {
@@ -346,9 +565,9 @@ function renderPacklist(pack) {
 
 async function getAIAdvice(location, days) {
   const summary = days.map(d =>
-    `${d.date}: avg ${d.avgTemp.toFixed(0)}°C (feels ${d.feelsLike.toFixed(0)}°), wind ${(d.windSpeed*3.6).toFixed(0)} km/h, rain ${d.rainChance.toFixed(0)}%, ${d.desc}`
+    `${d.date}: avg ${d.avgTemp.toFixed(0)}°C (${d.minTemp.toFixed(0)}–${d.maxTemp.toFixed(0)}°), wind ${d.windSpeed.toFixed(0)} km/h, rain ${d.rainChance}%, ${d.desc}`
   ).join('\n');
-  const prompt = `You are a seasoned golf travel expert. A golfer is heading to ${location} for ${days.length} day(s).
+  const prompt = `You are a seasoned golf travel expert. A golfer is heading to ${location} for ${days.length} round(s).
 
 Weather:
 ${summary}
@@ -361,62 +580,57 @@ Give practical golf advice in 3 short paragraphs:
 Be confident and concise. No filler.`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
   });
   if (!res.ok) throw new Error('AI unavailable');
   const data = await res.json();
-  return data.content.map(b => b.text||'').join('');
+  return data.content.map(b=>b.text||'').join('');
 }
 
+// ── MAIN ────────────────────────────────────────────────────────
 async function checkTrip() {
-  const city = document.getElementById('location').value.trim();
-  if (!city) { alert('Please enter a destination.'); return; }
+  const city  = document.getElementById('location').value.trim();
+  const start = document.getElementById('start-date').value;
+  const end   = document.getElementById('end-date').value;
+
+  if (!city)  { alert('Please enter a destination.'); return; }
+  if (!start) { alert('Please select a start date.'); return; }
+  if (!end)   { alert('Please select an end date.'); return; }
+  if (end < start) { alert('End date must be after start date.'); return; }
 
   const btn = document.getElementById('main-btn');
   btn.disabled = true;
-  btn.innerHTML = `<div class="spinner"></div><span>Loading…</span>`;
+  btn.innerHTML = `<div class="spinner"></div><span>Loading your forecast…</span>`;
 
   const result = document.getElementById('result');
   result.innerHTML = `<div class="packlist-card"><div class="skeleton" style="width:50%;height:20px;margin-bottom:16px"></div><div class="skeleton"></div><div class="skeleton" style="width:80%"></div></div>`;
 
   try {
-    const data   = await getWeather(city);
-    const allDays = processDays(groupDaily(data.list)).slice(0, 5);
-    const today   = allDays[0];
-    const rest    = allDays.slice(1);
-    const pack    = generatePacklist(allDays);
+    const geo   = await geocode(city);
+    const raw   = await getWeather(geo.lat, geo.lon);
+    const days  = processWeatherData(raw, start, end);
+
+    if (!days.length) {
+      result.innerHTML = `<div class="alert">⚠️ No forecast data for those dates. Please pick dates within the next 14 days.</div>`;
+      btn.disabled = false; btn.innerHTML = `<span>Check my golf packer</span>`;
+      return;
+    }
+
+    const firstDay  = days[0];
+    const restDays  = days.slice(1);
+    const pack      = generatePacklist(days);
+    const tripLabel = days.length === 1 ? 'Your Round' : `Day 1 of ${days.length}`;
 
     result.innerHTML = `
-      <div class="section-title">⛳ Today's Forecast</div>
-      <div class="today-card">
-        <div class="today-top">
-          <div>
-            <div class="today-label">Today's Round</div>
-            <div class="today-date">${formatDate(today.date)}</div>
-            <div class="today-desc">${weatherIcon(today.avgTemp, today.rainChance, today.desc)} ${today.desc}</div>
-          </div>
-          <div class="today-temp-block">
-            <div class="today-temp">${today.avgTemp.toFixed(0)}°C</div>
-            <div class="today-feels">Feels ${today.feelsLike.toFixed(0)}°</div>
-          </div>
-        </div>
-        <div class="today-meta">
-          <div class="today-meta-item">🌡️ ${today.minTemp.toFixed(0)}° – ${today.maxTemp.toFixed(0)}°</div>
-          <div class="today-meta-item">💧 ${today.rainChance.toFixed(0)}% rain</div>
-          <div class="today-meta-item">💨 ${(today.windSpeed*3.6).toFixed(0)} km/h</div>
-        </div>
-        <div class="slots">
-          ${renderSlot('Morning','06:00–12:00', today.morning)}
-          ${renderSlot('Afternoon','12:00–18:00', today.afternoon)}
-          ${renderSlot('Evening','18:00–22:00', today.evening)}
-        </div>
-      </div>
+      <div class="section-title">⛳ ${geo.name} · ${days.length} Day${days.length>1?'s':''}</div>
+      ${renderDayCard(firstDay, tripLabel)}
 
-      ${rest.length ? `
-        <div class="section-title" style="margin-top:28px">📅 Next ${rest.length} Days</div>
-        <div class="week-grid">${rest.map(renderWeekCard).join('')}</div>` : ''}
+      ${restDays.length === 1 ? renderDayCard(restDays[0], 'Day 2') : ''}
+
+      ${restDays.length > 1 ? `
+        <div class="section-title" style="margin-top:24px">📅 Rest of Your Trip</div>
+        <div class="week-grid">${restDays.map(renderWeekCard).join('')}</div>` : ''}
 
       ${renderPacklist(pack)}
 
@@ -429,7 +643,7 @@ async function checkTrip() {
         </div>
       </div>`;
 
-    getAIAdvice(city, allDays).then(advice => {
+    getAIAdvice(geo.name, days).then(advice => {
       const el = document.getElementById('ai-section');
       if (el) el.querySelector('.ai-advice-text').innerHTML =
         advice.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('');
@@ -440,7 +654,7 @@ async function checkTrip() {
     });
 
   } catch(err) {
-    result.innerHTML = `<div class="alert">⚠️ Couldn't load weather for "<strong>${city}</strong>". Try a nearby major city (e.g. "Malaga" instead of "Marbella").</div>`;
+    result.innerHTML = `<div class="alert">⚠️ Couldn't find "<strong>${city}</strong>". Try a nearby city (e.g. "Malaga" instead of "Marbella").</div>`;
   }
 
   btn.disabled = false;
