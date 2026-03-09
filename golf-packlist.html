@@ -147,11 +147,17 @@
   .packlist-card { background: white; border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); margin-bottom: 16px; }
   .pack-category { margin-bottom: 20px; }
   .pack-category:last-child { margin-bottom: 0; }
-  .pack-cat-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f0e8d0; }
-  .pack-items { display: flex; flex-direction: column; gap: 7px; }
-  .pack-item { display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-dark); }
-  .pack-check { width: 20px; height: 20px; background: var(--green-bright); border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.65rem; font-weight: 700; }
+  .pack-cat-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f0e8d0; display: flex; align-items: center; justify-content: space-between; }
+  .pack-items { display: flex; flex-direction: column; gap: 4px; }
+  .pack-item { display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-dark); padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; user-select: none; }
+  .pack-item:hover { background: #f7faf8; }
+  .pack-item.ticked { background: #f0faf5; }
+  .pack-item.ticked .pack-name { text-decoration: line-through; color: #aac4b4; }
+  .pack-item.ticked .pack-qty { opacity: 0.4; }
+  .pack-check { width: 22px; height: 22px; border: 2px solid #d0e4d8; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: transparent; font-size: 0.7rem; font-weight: 700; transition: all 0.15s; background: white; }
+  .pack-item.ticked .pack-check { background: var(--green-bright); border-color: var(--green-bright); color: white; }
   .pack-qty { margin-left: auto; background: var(--green-light); color: var(--green-deep); font-size: 0.75rem; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
+  .pack-progress { font-size: 0.72rem; color: var(--text-mid); font-weight: 400; }
   .pack-tip { margin-top: 16px; padding: 12px 16px; background: #fff8e6; border-radius: 10px; font-size: 0.82rem; color: #7a5a00; line-height: 1.5; }
 
   .skeleton { background: linear-gradient(90deg,#f0f4f2 25%,#e2ebe6 50%,#f0f4f2 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; height: 14px; margin-bottom: 8px; }
@@ -206,15 +212,29 @@
 
       <div class="step">
         <div class="step-num">Step 3</div>
-        <div class="step-label">When is your trip? <span style="font-weight:400;color:#8aab97;font-size:0.7rem;text-transform:none;letter-spacing:0">(up to 14 days ahead)</span></div>
-        <div class="date-range-row">
-          <div class="date-field">
-            <label>From</label>
-            <input type="date" id="start-date" />
-          </div>
-          <div class="date-field">
-            <label>To</label>
-            <input type="date" id="end-date" />
+        <div class="step-label">One round or a full trip?</div>
+        <div class="gt-toggle" style="margin-bottom:16px">
+          <button class="gt-btn active" id="mode-trip" onclick="setTripMode('trip')">
+            <span class="gt-icon">🧳</span>
+            <span class="gt-label">Full trip</span>
+            <span class="gt-sub">Pick a date range</span>
+          </button>
+          <button class="gt-btn" id="mode-oneday" onclick="setTripMode('oneday')">
+            <span class="gt-icon">📅</span>
+            <span class="gt-label">One round</span>
+            <span class="gt-sub">Just one day</span>
+          </button>
+        </div>
+        <div id="date-range-section">
+          <div class="date-range-row">
+            <div class="date-field">
+              <label>From</label>
+              <input type="date" id="start-date" />
+            </div>
+            <div class="date-field">
+              <label>To</label>
+              <input type="date" id="end-date" />
+            </div>
           </div>
         </div>
         <div class="cal-strip">
@@ -239,6 +259,20 @@ function setGolferType(type) {
   golferType = type;
   document.getElementById('gt-avg').classList.toggle('active', type === 'average');
   document.getElementById('gt-cold').classList.toggle('active', type === 'cold');
+}
+
+// ── TRIP MODE ───────────────────────────────────────────────────
+let tripMode = 'trip';
+function setTripMode(mode) {
+  tripMode = mode;
+  document.getElementById('mode-trip').classList.toggle('active', mode === 'trip');
+  document.getElementById('mode-oneday').classList.toggle('active', mode === 'oneday');
+  document.getElementById('date-range-section').style.display = mode === 'trip' ? 'block' : 'none';
+  if (mode === 'oneday') {
+    // clear end date so calendar works in single-day mode
+    document.getElementById('end-date').value = '';
+    refreshCal(); updateSummary();
+  }
 }
 
 // ── CLOTHING LOGIC ──────────────────────────────────────────────
@@ -288,15 +322,15 @@ function getClothingForTemp(avgTemp, rainChance, windSpeed, type) {
     }
     tip = '💡 Many golfers wear a layer they can remove after a few holes.';
   } else if (avgTemp <= 24) {
-    // ~20°C bracket
+    // ~20°C bracket — shorts from 15°C+
     if (cold) {
       items.push('Golf polo');
       items.push('Optional light sweater in the morning');
-      items.push('Lightweight golf pants');
+      items.push('Golf shorts or lightweight pants');
       items.push('Cap');
     } else {
       items.push('Golf polo');
-      items.push('Golf pants or golf shorts');
+      items.push('Golf shorts');
       items.push('Cap or visor');
       items.push('Sunglasses');
     }
@@ -326,7 +360,7 @@ function getClothingForTemp(avgTemp, rainChance, windSpeed, type) {
 function generatePacklist(days, type) {
   const n        = days.length;
   const cold     = type === 'cold';
-  const hotDays  = days.filter(d => d.avgTemp > 24).length;
+  const hotDays  = days.filter(d => d.avgTemp > 15).length;
   const coldDays = days.filter(d => d.avgTemp <= 12).length;
   const mildDays = n - hotDays - coldDays;
   const anyRain  = days.some(d => d.rainChance > 40);
@@ -402,6 +436,12 @@ function buildCalStrip() {
 }
 
 function handleCalClick(ds) {
+  if (tripMode === 'oneday') {
+    startInput.value = ds;
+    endInput.value   = ds;
+    refreshCal(); updateSummary();
+    return;
+  }
   const s = startInput.value, e = endInput.value;
   if (!s || (s && e)) { startInput.value = ds; endInput.value = ''; }
   else if (s && !e) {
@@ -428,7 +468,10 @@ function refreshCal() {
 function updateSummary() {
   const s = startInput.value, e = endInput.value;
   const el = document.getElementById('trip-summary');
-  if (s && e) {
+  if (tripMode === 'oneday' && s) {
+    el.textContent = `⛳ One round · ${new Date(s+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'})}`;
+    el.classList.add('visible');
+  } else if (s && e) {
     const days = Math.round((parseDate(e)-parseDate(s))/(86400000))+1;
     el.textContent = `⛳ ${days} day${days>1?'s':''} · ${new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})} – ${new Date(e+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
     el.classList.add('visible');
@@ -589,22 +632,41 @@ function renderPacklist(pack) {
     { label:'🏌️ Equipment', items: pack.equipment },
     { label:'🧴 Essentials', items: pack.essentials },
   ];
+  let itemId = 0;
   return `<div class="packlist-card">
     <div class="section-title">🎒 Your Full Pack List</div>
-    ${cats.map(cat=>`
+    ${cats.map(cat => {
+      const ids = cat.items.map(() => `pi-${itemId++}`);
+      return `
       <div class="pack-category">
-        <div class="pack-cat-title">${cat.label}</div>
+        <div class="pack-cat-title">
+          ${cat.label}
+          <span class="pack-progress" id="prog-${cat.label.replace(/[^a-z]/gi,'')}"></span>
+        </div>
         <div class="pack-items">
-          ${cat.items.map(item=>`
-            <div class="pack-item">
+          ${cat.items.map((item, i) => `
+            <div class="pack-item" id="${ids[i]}" onclick="tickItem('${ids[i]}', '${cat.label.replace(/[^a-z]/gi,'')}', ${cat.items.length})">
               <div class="pack-check">✓</div>
-              <span>${item.name}</span>
+              <span class="pack-name">${item.name}</span>
               ${item.qty > 1 ? `<span class="pack-qty">×${item.qty}</span>` : ''}
             </div>`).join('')}
         </div>
-      </div>`).join('')}
+      </div>`;
+    }).join('')}
     <div class="pack-tip">💡 <strong>Golf trip tip:</strong> Always pack 1 warm layer, 1 windproof layer, and 1 extra polo — you'll be ready for almost any golf weather.</div>
   </div>`;
+}
+
+function tickItem(id, catKey, total) {
+  const el = document.getElementById(id);
+  el.classList.toggle('ticked');
+  // update progress
+  const catEl = document.getElementById(`prog-${catKey}`);
+  if (catEl) {
+    const allItems = el.closest('.pack-category').querySelectorAll('.pack-item');
+    const ticked   = el.closest('.pack-category').querySelectorAll('.pack-item.ticked').length;
+    catEl.textContent = ticked > 0 ? `${ticked}/${allItems.length} packed` : '';
+  }
 }
 
 // ── MAIN ────────────────────────────────────────────────────────
@@ -613,10 +675,12 @@ async function checkTrip() {
   const start = document.getElementById('start-date').value;
   const end   = document.getElementById('end-date').value;
 
-  if (!city)       { alert('Please enter a destination.'); return; }
-  if (!start)      { alert('Please select a start date.'); return; }
-  if (!end)        { alert('Please select an end date.'); return; }
-  if (end < start) { alert('End date must be after start date.'); return; }
+  if (!city)  { alert('Please enter a destination.'); return; }
+  if (!start) { alert('Please select a date.'); return; }
+  if (tripMode === 'trip' && !end)        { alert('Please select an end date.'); return; }
+  if (tripMode === 'trip' && end < start) { alert('End date must be after start date.'); return; }
+
+  const effectiveEnd = (tripMode === 'oneday') ? start : end;
 
   const btn = document.getElementById('main-btn');
   btn.disabled = true;
@@ -628,7 +692,7 @@ async function checkTrip() {
   try {
     const geo  = await geocode(city);
     const raw  = await getWeather(geo.lat, geo.lon);
-    const days = processWeather(raw, start, end);
+    const days = processWeather(raw, start, effectiveEnd);
 
     if (!days.length) {
       result.innerHTML = `<div class="alert">⚠️ No forecast data for those dates. Please pick dates within the next 14 days.</div>`;
