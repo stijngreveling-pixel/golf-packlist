@@ -180,7 +180,51 @@
   .pack-progress { font-size: 0.72rem; color: var(--text-mid); font-weight: 400; }
   .pack-tip { margin-top: 16px; padding: 12px 16px; background: #fff8e6; border-radius: 10px; font-size: 0.82rem; color: #7a5a00; line-height: 1.5; }
 
-  .skeleton { background: linear-gradient(90deg,#f0f4f2 25%,#e2ebe6 50%,#f0f4f2 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; height: 14px; margin-bottom: 8px; }
+  /* TEE TIME PICKER */
+  .tee-time-section { display: none; margin-top: 14px; }
+  .tee-time-section.visible { display: block; }
+  .tee-time-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mid); margin-bottom: 10px; }
+  .tee-time-toggle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tt-btn { background: #f7faf8; border: 2px solid #e2e8e4; border-radius: 10px; padding: 12px 8px; cursor: pointer; text-align: center; transition: all 0.18s; font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .tt-btn:hover { border-color: var(--green-bright); background: #f0faf5; }
+  .tt-btn.active { border-color: var(--green-deep); background: var(--green-deep); }
+  .tt-icon { font-size: 1.3rem; }
+  .tt-label { font-size: 0.82rem; font-weight: 700; color: var(--text-dark); }
+  .tt-sub { font-size: 0.68rem; color: var(--text-mid); }
+  .tt-btn.active .tt-label { color: white; }
+  .tt-btn.active .tt-sub { color: var(--green-light); }
+
+  /* ARE YOU SURE MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(10,25,15,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: white; border-radius: 20px; padding: 32px 28px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: scale(0.92); transition: transform 0.2s; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal-emoji { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--green-deep); margin-bottom: 10px; }
+  .modal-body { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 24px; }
+  .modal-body strong { color: var(--text-dark); }
+  .modal-buttons { display: flex; flex-direction: column; gap: 10px; }
+  .modal-btn-yes { background: var(--green-deep); color: white; border: none; border-radius: 10px; padding: 13px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .modal-btn-yes:hover { background: var(--green-mid); }
+  .modal-btn-no { background: #f0faf5; color: var(--green-mid); border: 2px solid var(--green-light); border-radius: 10px; padding: 12px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .modal-btn-no:hover { background: var(--green-light); }
+  .caddie-card { background: var(--green-deep); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin-bottom: 16px; color: white; }
+  .caddie-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .caddie-location { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-light); margin-bottom: 4px; }
+  .caddie-date { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: white; }
+  .caddie-tee { font-size: 0.82rem; color: var(--green-light); margin-top: 3px; }
+  .caddie-temp-block { text-align: right; }
+  .caddie-temp { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: white; line-height: 1; }
+  .caddie-feels { font-size: 0.78rem; color: var(--green-light); margin-top: 3px; }
+  .caddie-conditions { display: flex; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+  .caddie-cond { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 14px; font-size: 0.82rem; color: var(--green-light); display: flex; align-items: center; gap: 6px; }
+  .caddie-divider { border: none; border-top: 1px solid rgba(255,255,255,0.12); margin: 18px 0; }
+  .caddie-quip { font-size: 1rem; font-style: italic; color: var(--gold); margin-bottom: 18px; line-height: 1.5; font-family: 'Playfair Display', serif; }
+  .caddie-outfit-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-light); margin-bottom: 12px; }
+  .caddie-outfit { display: flex; flex-direction: column; gap: 8px; }
+  .caddie-item { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: white; }
+  .caddie-bullet { width: 8px; height: 8px; border-radius: 50%; background: var(--green-bright); flex-shrink: 0; }
+  .caddie-weather-icon { font-size: 3rem; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
   .alert { background: #fff3cd; border-left: 4px solid var(--gold); padding: 14px 18px; border-radius: 10px; font-size: 0.9rem; color: #7a5a00; margin-bottom: 20px; }
   #result { animation: slideUp 0.4s ease both; }
@@ -258,6 +302,26 @@
             </div>
           </div>
         </div>
+        <div class="tee-time-section" id="tee-time-section">
+          <div class="tee-time-label">When's your tee time?</div>
+          <div class="tee-time-toggle">
+            <button class="tt-btn active" id="tt-morning" onclick="setTeeTime('morning')">
+              <span class="tt-icon">🌅</span>
+              <span class="tt-label">Morning</span>
+              <span class="tt-sub">06:00 – 12:00</span>
+            </button>
+            <button class="tt-btn" id="tt-afternoon" onclick="setTeeTime('afternoon')">
+              <span class="tt-icon">☀️</span>
+              <span class="tt-label">Afternoon</span>
+              <span class="tt-sub">12:00 – 18:00</span>
+            </button>
+            <button class="tt-btn" id="tt-evening" onclick="setTeeTime('evening')">
+              <span class="tt-icon">🌇</span>
+              <span class="tt-label">Evening</span>
+              <span class="tt-sub">18:00 – 22:00</span>
+            </button>
+          </div>
+        </div>
         <div class="cal-strip">
           <div class="cal-days" id="cal-days"></div>
         </div>
@@ -273,6 +337,19 @@
   <div id="result"></div>
 </div>
 
+<!-- COLD WARNING MODAL -->
+<div class="modal-overlay" id="cold-modal">
+  <div class="modal">
+    <span class="modal-emoji" id="modal-emoji">🥶</span>
+    <div class="modal-title" id="modal-title">Seriously?</div>
+    <div class="modal-body" id="modal-body">It's <strong id="modal-temp"></strong> out there. That's not golf weather, that's a survival situation.</div>
+    <div class="modal-buttons">
+      <button class="modal-btn-yes" onclick="confirmColdPlay()">⛳ Yes, I'm playing. I'm hard.</button>
+      <button class="modal-btn-no" onclick="closeModal()">🏠 Actually, maybe not…</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── GOLFER TYPE ─────────────────────────────────────────────────
 let golferType = 'average';
@@ -284,16 +361,24 @@ function setGolferType(type) {
 
 // ── TRIP MODE ───────────────────────────────────────────────────
 let tripMode = 'trip';
+let teeTime  = 'morning';
+
 function setTripMode(mode) {
   tripMode = mode;
   document.getElementById('mode-trip').classList.toggle('active', mode === 'trip');
   document.getElementById('mode-oneday').classList.toggle('active', mode === 'oneday');
   document.getElementById('date-range-section').style.display = mode === 'trip' ? 'block' : 'none';
+  document.getElementById('tee-time-section').classList.toggle('visible', mode === 'oneday');
   if (mode === 'oneday') {
-    // clear end date so calendar works in single-day mode
     document.getElementById('end-date').value = '';
     refreshCal(); updateSummary();
   }
+}
+
+function setTeeTime(t) {
+  teeTime = t;
+  ['morning','afternoon','evening'].forEach(s =>
+    document.getElementById(`tt-${s}`).classList.toggle('active', s === t));
 }
 
 // ── CLOTHING LOGIC ──────────────────────────────────────────────
@@ -777,7 +862,93 @@ function tickItem(id, catKey, total) {
   }
 }
 
-// ── MAIN ────────────────────────────────────────────────────────
+// ── CADDIE CARD ─────────────────────────────────────────────────
+function getCaddieQuip(slot, type) {
+  const cold  = type === 'cold';
+  const temp  = slot.temp;
+  const rainy = slot.rain > 40;
+  const windy = slot.wind > 20;
+
+  if (rainy && windy)  return "It's going to be a proper character-builder out there. Your scorecard might get wet, but so does everyone's.";
+  if (rainy)           return "Rain's in the forecast. The good news? Soft greens. The bad news? Everything else.";
+  if (windy && temp < 15) return "Cold and breezy — just how golf was meant to be played. In Scotland. Not voluntarily.";
+  if (windy)           return "Wind's up. Time to hit that punch shot you've been practicing in the mirror.";
+  if (temp > 25)       return "Scorcher today. Stay hydrated, reapply sunscreen on the back nine, and blame the heat if you three-putt.";
+  if (temp > 18)       return "Perfect conditions. No excuses today. None. We mean it.";
+  if (temp < 10 && cold) return "It's absolutely brass out there. Layer up like your handicap depends on it — because it does.";
+  if (temp < 10)       return "Chilly one today. The course will be quiet though — only the truly dedicated show up in this.";
+  if (temp < 15 && cold) return "A bit nippy. You'll warm up by the 4th hole. Probably. Bring the midlayer just in case.";
+  return "Decent day for a round. Get out there before the weather app changes its mind.";
+}
+
+function renderCaddieCard(day, slotKey, type, locationName) {
+  const slot     = day[slotKey];
+  const slotData = slot || { temp: day.avgTemp, feels: day.avgTemp, rain: day.rainChance, wind: day.windSpeed, code: 0 };
+  const w        = wmoInfo(slotData.code || 0);
+  const { items } = getClothingForTemp(slotData.temp, slotData.rain, slotData.wind, type);
+  const quip     = getCaddieQuip(slotData, type);
+  const teeLabels = { morning: '🌅 Morning round', afternoon: '☀️ Afternoon round', evening: '🌇 Evening round' };
+  const typeLabel = type === 'cold' ? '🥶 Cold-sensitive golfer' : '🏌️ Average golfer';
+
+  return `<div class="caddie-card">
+    <div class="caddie-header">
+      <div>
+        <div class="caddie-location">⛳ ${locationName}</div>
+        <div class="caddie-date">${fmt(day.date)}</div>
+        <div class="caddie-tee">${teeLabels[slotKey]} · ${typeLabel}</div>
+      </div>
+      <div class="caddie-temp-block">
+        <div class="caddie-weather-icon">${w.icon}</div>
+        <div class="caddie-temp">${slotData.temp.toFixed(0)}°C</div>
+        <div class="caddie-feels">Feels like ${slotData.feels.toFixed(0)}°</div>
+      </div>
+    </div>
+    <div class="caddie-conditions">
+      <div class="caddie-cond">💧 ${slotData.rain}% rain</div>
+      <div class="caddie-cond">💨 ${slotData.wind.toFixed(0)} km/h</div>
+      <div class="caddie-cond">${w.desc}</div>
+    </div>
+    <hr class="caddie-divider">
+    <div class="caddie-quip">"${quip}"</div>
+    <div class="caddie-outfit-title">What to wear on the tee</div>
+    <div class="caddie-outfit">
+      ${items.map(i => `<div class="caddie-item"><div class="caddie-bullet"></div>${i}</div>`).join('')}
+    </div>
+  </div>`;
+}
+// ── COLD WARNING MODAL ──────────────────────────────────────────
+let pendingTripCallback = null;
+
+const coldMessages = [
+  { emoji: '🥶', title: 'Bold choice.', body: "That's not golf weather, that's a polar expedition." },
+  { emoji: '🧊', title: 'Are you sure?', body: "The greens might be frozen. Your fingers definitely will be." },
+  { emoji: '🐧', title: 'Only penguins play in this.', body: "Even your caddie is reconsidering his career choices." },
+  { emoji: '😬', title: 'Respect.', body: "Your dedication is either inspiring or deeply concerning." },
+  { emoji: '🏔️', title: 'Scott of the Antarctic vibes.', body: "Pack your clubs and a will." },
+];
+
+function showColdModal(temp, callback) {
+  const msg = coldMessages[Math.floor(Math.random() * coldMessages.length)];
+  document.getElementById('modal-emoji').textContent = msg.emoji;
+  document.getElementById('modal-title').textContent = msg.title;
+  document.getElementById('modal-body').innerHTML = `It's <strong>${temp.toFixed(0)}°C</strong> out there. ${msg.body}`;
+  document.getElementById('cold-modal').classList.add('open');
+  pendingTripCallback = callback;
+}
+
+function confirmColdPlay() {
+  document.getElementById('cold-modal').classList.remove('open');
+  if (pendingTripCallback) { pendingTripCallback(); pendingTripCallback = null; }
+}
+
+function closeModal() {
+  document.getElementById('cold-modal').classList.remove('open');
+  pendingTripCallback = null;
+  const btn = document.getElementById('main-btn');
+  btn.disabled = false;
+  btn.innerHTML = `<span>Check my golf packer</span>`;
+}
+
 async function checkTrip() {
   const city  = selectedLocation ? selectedLocation.name : document.getElementById('location').value.trim();
   const start = document.getElementById('start-date').value;
@@ -808,27 +979,46 @@ async function checkTrip() {
       return;
     }
 
-    const type      = golferType;
-    const firstDay  = days[0];
-    const restDays  = days.slice(1);
-    const pack      = generatePacklist(days, type);
-    const tripLabel = days.length === 1 ? 'Your Round' : `Day 1 of ${days.length}`;
+    const type     = golferType;
+    const firstDay = days[0];
+    const checkSlot = firstDay[teeTime] || firstDay;
+    const checkTemp = checkSlot.temp !== undefined ? checkSlot.temp : firstDay.avgTemp;
 
-    result.innerHTML = `
-      <div class="section-title">⛳ ${geo.name} · ${days.length} Day${days.length>1?'s':''}</div>
+    const proceed = () => renderResults(days, type, geo);
 
-      ${renderDayCard(firstDay, tripLabel, type)}
-
-      ${restDays.length === 1 ? renderDayCard(restDays[0], 'Day 2', type) : ''}
-
-      ${restDays.length > 1 ? `
-        <div class="section-title" style="margin-top:24px">📅 Rest of Your Trip</div>
-        <div class="week-grid">${restDays.map(d=>renderWeekCard(d,type)).join('')}</div>` : ''}
-
-      ${renderPacklist(pack)}`;
+    if (checkTemp < 10) {
+      result.innerHTML = '';
+      showColdModal(checkTemp, proceed);
+    } else {
+      proceed();
+    }
 
   } catch(err) {
     result.innerHTML = `<div class="alert">⚠️ Couldn't find "<strong>${city}</strong>". Try a nearby city (e.g. "Malaga" instead of "Marbella").</div>`;
+    btn.disabled = false;
+    btn.innerHTML = `<span>Check my golf packer</span>`;
+  }
+}
+
+function renderResults(days, type, geo) {
+  const btn      = document.getElementById('main-btn');
+  const result   = document.getElementById('result');
+  const firstDay = days[0];
+  const restDays = days.slice(1);
+
+  if (tripMode === 'oneday') {
+    result.innerHTML = renderCaddieCard(firstDay, teeTime, type, geo.name);
+  } else {
+    const pack      = generatePacklist(days, type);
+    const tripLabel = days.length === 1 ? 'Your Round' : `Day 1 of ${days.length}`;
+    result.innerHTML = `
+      <div class="section-title">⛳ ${geo.name} · ${days.length} Day${days.length>1?'s':''}</div>
+      ${renderDayCard(firstDay, tripLabel, type)}
+      ${restDays.length === 1 ? renderDayCard(restDays[0], 'Day 2', type) : ''}
+      ${restDays.length > 1 ? `
+        <div class="section-title" style="margin-top:24px">📅 Rest of Your Trip</div>
+        <div class="week-grid">${restDays.map(d=>renderWeekCard(d,type)).join('')}</div>` : ''}
+      ${renderPacklist(pack)}`;
   }
 
   btn.disabled = false;
