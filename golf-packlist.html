@@ -337,7 +337,8 @@ function getClothingForTemp(avgTemp, rainChance, windSpeed, type) {
     } else {
       items.push('Golf polo');
       items.push('Optional thin midlayer for the first few holes');
-      items.push(rainy ? 'Waterproof jacket' : windy ? 'Light wind jacket' : null);
+      if (rainy) items.push('Waterproof jacket');
+      else if (windy) items.push('Light wind jacket');
       items.push('Golf pants or lightweight pants');
       items.push('Cap');
     }
